@@ -64,6 +64,13 @@ select:disabled{background:#f5f0ea;color:#b0a898}
 .dir-info{margin-top:12px;padding:12px;background:var(--warm-white);border-radius:10px;font-size:14px;color:#6b5e52;line-height:1.6}
 .dir-info strong{color:var(--brown)}
 .dir-loading{color:#b0a898;font-style:italic}
+.dir-summary{margin-bottom:10px}
+.dir-row{padding:6px 0;display:flex;align-items:center;gap:6px;font-size:15px}
+.dir-row:not(:last-child){border-bottom:1px dashed #e0d5c8}
+.dir-icon{font-size:18px;flex-shrink:0}
+.dir-detail-title{font-size:14px;font-weight:700;color:var(--terra);margin:8px 0 6px;padding-top:8px;border-top:1px solid #e8ddd0}
+.dir-steps{font-size:13px;line-height:1.7}
+.dir-step{padding:3px 0}
 /* Footer */
 .app-footer{text-align:center;padding:20px 0 10px;font-size:12px;color:#b0a898}
 .app-footer a{color:var(--terra);text-decoration:none}
@@ -84,7 +91,7 @@ select:disabled{background:#f5f0ea;color:#b0a898}
   <div class="app-header">
     <div class="brand-name">IOHS 十分幸福</div>
     <div class="app-title">找尋最近門市</div>
-    <div class="app-subtitle">輸入您的地址，幫您找到最近的合作藥局</div>
+    <div class="app-subtitle">輸入您的地址，幫您找到最近的合作門市</div>
   </div>
   <div class="card">
     <div class="card-label"><span class="icon">📍</span>請輸入您的地址</div>
@@ -130,124 +137,100 @@ select:disabled{background:#f5f0ea;color:#b0a898}
 </script>
 <script>var geocoder=null,dirService=null,mapsReady=false;
 
-/* === Google Maps loaded callback === */
 function onMapsReady(){
-  try{
-    geocoder=new google.maps.Geocoder();
-    dirService=new google.maps.DirectionsService();
-    mapsReady=true;
-    document.getElementById('mapStatus').style.display='none';
-  }catch(e){
-    document.getElementById('mapStatus').textContent='Google Maps 載入異常：'+e.message;
-  }
+  try{geocoder=new google.maps.Geocoder();dirService=new google.maps.DirectionsService();mapsReady=true;document.getElementById('mapStatus').style.display='none'}
+  catch(e){document.getElementById('mapStatus').textContent='Google Maps 載入異常：'+e.message}
 }
+function onMapsError(){document.getElementById('mapStatus').textContent='Google Maps 載入失敗，請確認 API Key 及網路連線'}
 
-/* === Google Maps load error === */
-function onMapsError(){
-  document.getElementById('mapStatus').textContent='Google Maps 載入失敗，請確認 API Key 及網路連線';
-}
-
-/* === Dropdown init - no Google dependency === */
 document.addEventListener('DOMContentLoaded',function(){
-  var cityEl=document.getElementById('city');
-  var distEl=document.getElementById('district');
+  var cityEl=document.getElementById('city'),distEl=document.getElementById('district');
   var keys=Object.keys(TW_DISTRICTS);
-  for(var i=0;i<keys.length;i++){
-    var o=document.createElement('option');
-    o.value=keys[i];o.textContent=keys[i];
-    cityEl.appendChild(o);
-  }
+  for(var i=0;i<keys.length;i++){var o=document.createElement('option');o.value=keys[i];o.textContent=keys[i];cityEl.appendChild(o)}
   cityEl.addEventListener('change',function(){
-    distEl.innerHTML='<option value="">請選擇鄉鎮市區</option>';
-    distEl.disabled=!cityEl.value;
-    if(cityEl.value&&TW_DISTRICTS[cityEl.value]){
-      var ds=TW_DISTRICTS[cityEl.value];
-      for(var j=0;j<ds.length;j++){
-        var o2=document.createElement('option');
-        o2.value=ds[j];o2.textContent=ds[j];
-        distEl.appendChild(o2);
-      }
-    }
+    distEl.innerHTML='<option value="">請選擇鄉鎮市區</option>';distEl.disabled=!cityEl.value;
+    if(cityEl.value&&TW_DISTRICTS[cityEl.value]){var ds=TW_DISTRICTS[cityEl.value];for(var j=0;j<ds.length;j++){var o2=document.createElement('option');o2.value=ds[j];o2.textContent=ds[j];distEl.appendChild(o2)}}
   });
   document.getElementById('searchBtn').addEventListener('click',function(){doSearch()});
 });
 
-/* === Haversine distance (km) === */
-function haversine(a,b,c,d){
-  var R=6371,dL=(c-a)*Math.PI/180,dN=(d-b)*Math.PI/180;
-  var x=Math.sin(dL/2)*Math.sin(dL/2)+Math.cos(a*Math.PI/180)*Math.cos(c*Math.PI/180)*Math.sin(dN/2)*Math.sin(dN/2);
-  return R*2*Math.atan2(Math.sqrt(x),Math.sqrt(1-x));
-}
+function haversine(a,b,c,d){var R=6371,dL=(c-a)*Math.PI/180,dN=(d-b)*Math.PI/180;var x=Math.sin(dL/2)*Math.sin(dL/2)+Math.cos(a*Math.PI/180)*Math.cos(c*Math.PI/180)*Math.sin(dN/2)*Math.sin(dN/2);return R*2*Math.atan2(Math.sqrt(x),Math.sqrt(1-x))}
 
-/* === Geocode with promise === */
-function geoAddr(addr){
-  return new Promise(function(ok,no){
-    if(!geocoder){no(new Error('Google Maps 尚未載入，請重新整理頁面'));return}
-    geocoder.geocode({address:addr,region:'tw',language:'zh-TW'},function(results,status){
-      if(status==='OK'&&results&&results[0]){
-        var loc=results[0].geometry.location;
-        ok({lat:loc.lat(),lng:loc.lng()});
-      }else{
-        no(new Error('無法定位地址「'+addr+'」('+status+')'));
-      }
-    });
-  });
-}
+function geoAddr(addr){return new Promise(function(ok,no){if(!geocoder){no(new Error('Google Maps 尚未載入，請重新整理頁面'));return}geocoder.geocode({address:addr,region:'tw',language:'zh-TW'},function(r,s){if(s==='OK'&&r&&r[0]){var loc=r[0].geometry.location;ok({lat:loc.lat(),lng:loc.lng()})}else{no(new Error('無法定位地址「'+addr+'」('+s+')'))}})})}
 
-/* === Find nearest N stores === */
 async function findNearest(uLat,uLng,n){
-  var results=[];
-  var total=STORES.length;
-  var progressEl=document.getElementById('searchBtn');
+  var a=[],total=STORES.length,btn=document.getElementById('searchBtn');
   for(var i=0;i<total;i++){
-    progressEl.innerHTML='<span class="spinner"></span> 比對門市中 ('+(i+1)+'/'+total+')...';
-    try{
-      var c=await geoAddr(STORES[i].address);
-      var d=haversine(uLat,uLng,c.lat,c.lng);
-      results.push({id:STORES[i].id,region:STORES[i].region,city:STORES[i].city,name:STORES[i].name,address:STORES[i].address,phone:STORES[i].phone,lat:c.lat,lng:c.lng,dist:d});
-    }catch(e){/* skip */}
+    btn.innerHTML='<span class="spinner"></span> 比對門市中 ('+(i+1)+'/'+total+')...';
+    try{var c=await geoAddr(STORES[i].address);a.push({id:STORES[i].id,region:STORES[i].region,city:STORES[i].city,name:STORES[i].name,address:STORES[i].address,phone:STORES[i].phone,lat:c.lat,lng:c.lng,dist:haversine(uLat,uLng,c.lat,c.lng)})}catch(e){}
   }
-  results.sort(function(a,b){return a.dist-b.dist});
-  return results.slice(0,n);
+  a.sort(function(x,y){return x.dist-y.dist});return a.slice(0,n);
 }
 
-/* === Google Maps external link === */
-function mUrl(oLa,oLn,dest,mode){
-  return 'https://www.google.com/maps/dir/?api=1&origin='+oLa+','+oLn+'&destination='+encodeURIComponent(dest)+'&travelmode='+mode;
-}
+function mUrl(oLa,oLn,dest,m){return 'https://www.google.com/maps/dir/?api=1&origin='+oLa+','+oLn+'&destination='+encodeURIComponent(dest)+'&travelmode='+m}
 
-/* === Fetch driving directions === */
-function fetchDir(oLa,oLn,store){
+function fetchBothDirs(oLa,oLn,store){
   var el=document.getElementById('dir-'+store.id);
-  if(!dirService){el.innerHTML='<span style="color:#b0a898">請點擊「開車導航」按鈕查看路線</span>';return}
-  dirService.route({
-    origin:{lat:oLa,lng:oLn},
-    destination:{lat:store.lat,lng:store.lng},
-    travelMode:'DRIVING'
-  },function(result,status){
-    if(status==='OK'&&result.routes&&result.routes[0]){
-      var leg=result.routes[0].legs[0];
-      var steps=[];
-      var max=Math.min(leg.steps.length,5);
-      for(var i=0;i<max;i++){steps.push((i+1)+'. '+leg.steps[i].instructions.replace(/<[^>]*>/g,''))}
-      el.innerHTML='<strong>\uD83D\uDE97 開車：'+leg.distance.text+'，約 '+leg.duration.text+'</strong><br><br>'+steps.join('<br>')+(leg.steps.length>5?'<br>...（點擊「開車導航」查看完整路線）':'');
-    }else{
-      el.innerHTML='<span style="color:#b0a898">請點擊「開車導航」按鈕查看路線</span>';
+  var driveText='',transitText='',driveDone=false,transitDone=false;
+
+  function renderWhenReady(){
+    if(!driveDone||!transitDone) return;
+    var html='<div class="dir-summary">';
+    html+='<div class="dir-row"><span class="dir-icon">\uD83D\uDE97</span><strong>開車</strong>：'+driveText+'</div>';
+    html+='<div class="dir-row"><span class="dir-icon">\uD83D\uDE8C</span><strong>大眾運輸</strong>：'+transitText+'</div>';
+    html+='</div>';
+    if(typeof transitSteps!=='undefined'&&transitSteps.length>0){
+      html+='<div class="dir-detail-title">\uD83D\uDE8C 大眾運輸路線預覽：</div><div class="dir-steps">';
+      for(var i=0;i<transitSteps.length;i++){html+='<div class="dir-step">'+(i+1)+'. '+transitSteps[i]+'</div>'}
+      html+='</div>';
     }
+    el.innerHTML=html;
+  }
+
+  var transitSteps=[];
+
+  // Fetch driving
+  dirService.route({origin:{lat:oLa,lng:oLn},destination:{lat:store.lat,lng:store.lng},travelMode:'DRIVING'},function(r,st){
+    if(st==='OK'&&r.routes&&r.routes[0]){var l=r.routes[0].legs[0];driveText=l.distance.text+'，約 '+l.duration.text}
+    else{driveText='請點擊按鈕查看'}
+    driveDone=true;renderWhenReady();
+  });
+
+  // Fetch transit
+  dirService.route({origin:{lat:oLa,lng:oLn},destination:{lat:store.lat,lng:store.lng},travelMode:'TRANSIT'},function(r,st){
+    if(st==='OK'&&r.routes&&r.routes[0]){
+      var l=r.routes[0].legs[0];
+      transitText=l.distance.text+'，約 '+l.duration.text;
+      var steps=l.steps;
+      for(var i=0;i<steps.length;i++){
+        var s=steps[i];
+        var instr=s.instructions?s.instructions.replace(/<[^>]*>/g,''):'';
+        if(s.travel_mode==='TRANSIT'&&s.transit){
+          var t=s.transit;
+          var line=t.line?t.line.short_name||t.line.name:'';
+          var vehicle=t.line&&t.line.vehicle?t.line.vehicle.name:'';
+          var dep=t.departure_stop?t.departure_stop.name:'';
+          var arr=t.arrival_stop?t.arrival_stop.name:'';
+          var stepText='搭乘 '+vehicle+' '+line+'（'+dep+' \u2192 '+arr+'）';
+          if(s.duration)stepText+='，約 '+s.duration.text;
+          transitSteps.push(stepText);
+        }else if(s.travel_mode==='WALKING'&&s.duration){
+          transitSteps.push('\u{1F6B6} 步行 '+s.distance.text+'（約 '+s.duration.text+'）');
+        }
+      }
+    }else{transitText='請點擊按鈕查看'}
+    transitDone=true;renderWhenReady();
   });
 }
 
-/* === Render store results === */
 function renderResults(stores,uLa,uLn){
-  var sec=document.getElementById('results');
-  var list=document.getElementById('storeList');
+  var sec=document.getElementById('results'),list=document.getElementById('storeList');
   list.innerHTML='';
   for(var i=0;i<stores.length;i++){
     var s=stores[i];
     var dt=s.dist<1?Math.round(s.dist*1000)+' 公尺':s.dist.toFixed(1)+' 公里';
     var pc=s.phone.replace(/[^\d+]/g,'');
-    var div=document.createElement('div');
-    div.className='store-card';
+    var div=document.createElement('div');div.className='store-card';
     div.innerHTML=''
       +'<div class="store-rank">'+(i+1)+'</div>'
       +'<div class="store-name">'+s.name+'</div>'
@@ -256,50 +239,30 @@ function renderResults(stores,uLa,uLn){
       +'<div class="store-phone"><span class="ic">\uD83D\uDCDE</span><span>'+s.phone+'</span></div>'
       +'<div class="act-row">'
       +'<a href="tel:'+pc+'" class="act-btn act-call">\uD83D\uDCDE 撥打電話</a>'
-      +'<a href="'+mUrl(uLa,uLn,s.address,'driving')+'" target="_blank" class="act-btn act-drive">\uD83D\uDE97 開車導航</a>'
       +'<a href="'+mUrl(uLa,uLn,s.address,'transit')+'" target="_blank" class="act-btn act-transit">\uD83D\uDE8C 大眾運輸</a>'
+      +'<a href="'+mUrl(uLa,uLn,s.address,'driving')+'" target="_blank" class="act-btn act-drive">\uD83D\uDE97 開車導航</a>'
       +'</div>'
-      +'<div class="dir-info" id="dir-'+s.id+'"><span class="dir-loading">\uD83D\uDD04 正在查詢開車路線...</span></div>';
+      +'<div class="dir-info" id="dir-'+s.id+'"><span class="dir-loading">\uD83D\uDD04 正在查詢交通資訊...</span></div>';
     list.appendChild(div);
   }
   sec.style.display='block';
   sec.scrollIntoView({behavior:'smooth',block:'start'});
-  for(var j=0;j<stores.length;j++){fetchDir(uLa,uLn,stores[j])}
+  for(var j=0;j<stores.length;j++){fetchBothDirs(uLa,uLn,stores[j])}
 }
 
-/* === Main search === */
 async function doSearch(){
-  var city=document.getElementById('city').value;
-  var dist=document.getElementById('district').value;
-  var street=document.getElementById('street').value.trim();
-  var btn=document.getElementById('searchBtn');
-  var errEl=document.getElementById('errMsg');
-
+  var city=document.getElementById('city').value,dist=document.getElementById('district').value,street=document.getElementById('street').value.trim();
+  var btn=document.getElementById('searchBtn'),errEl=document.getElementById('errMsg');
   if(!city){errEl.textContent='\u26A0\uFE0F 請選擇縣市';errEl.style.display='block';return}
   if(!dist){errEl.textContent='\u26A0\uFE0F 請選擇鄉鎮市區';errEl.style.display='block';return}
   if(!mapsReady){errEl.textContent='\u26A0\uFE0F Google Maps 尚未載入完成，請稍候幾秒再試一次。若持續失敗，請重新整理頁面。';errEl.style.display='block';return}
-
-  errEl.style.display='none';
-  document.getElementById('results').style.display='none';
-  btn.disabled=true;
-  btn.innerHTML='<span class="spinner"></span> 定位您的地址中...';
-
-  try{
-    var userLoc=await geoAddr(city+dist+street);
-    var nearest=await findNearest(userLoc.lat,userLoc.lng,3);
-    if(nearest.length===0){throw new Error('找不到附近的合作門市')}
-    renderResults(nearest,userLoc.lat,userLoc.lng);
-  }catch(e){
-    errEl.textContent='\u26A0\uFE0F '+e.message;
-    errEl.style.display='block';
-  }finally{
-    btn.disabled=false;
-    btn.innerHTML='\uD83D\uDD0D 尋找最近門市';
-  }
+  errEl.style.display='none';document.getElementById('results').style.display='none';
+  btn.disabled=true;btn.innerHTML='<span class="spinner"></span> 定位您的地址中...';
+  try{var u=await geoAddr(city+dist+street);var near=await findNearest(u.lat,u.lng,3);if(!near.length)throw new Error('找不到附近的合作門市');renderResults(near,u.lat,u.lng)}
+  catch(e){errEl.textContent='\u26A0\uFE0F '+e.message;errEl.style.display='block'}
+  finally{btn.disabled=false;btn.innerHTML='\uD83D\uDD0D 尋找最近門市'}
 }
 </script>
-<script async defer
-  src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCYTBKYMBrqganqjLoUJw86dTnVah7oVGM&callback=onMapsReady"
-  onerror="onMapsError()"></script>
+<script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCYTBKYMBrqganqjLoUJw86dTnVah7oVGM&callback=onMapsReady" onerror="onMapsError()"></script>
 </body>
 </html>
