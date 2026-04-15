@@ -14,44 +14,41 @@
 @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&display=swap');
 body{font-family:'Noto Sans TC',sans-serif;background:var(--cream);color:var(--brown);min-height:100vh;-webkit-text-size-adjust:100%}
 .app-wrap{max-width:480px;margin:0 auto;padding:16px 16px 40px}
-/* Header */
 .app-header{text-align:center;padding:24px 0 18px;position:relative}
 .app-header::before{content:'';position:absolute;top:0;left:50%;transform:translateX(-50%);width:60px;height:4px;background:var(--mustard);border-radius:2px}
 .brand-name{font-size:13px;color:var(--terra);letter-spacing:2px;margin-bottom:4px;font-weight:500}
 .app-title{font-size:26px;font-weight:900;color:var(--brown);line-height:1.3}
 .app-subtitle{font-size:15px;color:#8a7a6d;margin-top:6px}
-/* Card */
 .card{background:#fff;border-radius:var(--radius);box-shadow:var(--shadow);padding:22px 20px;margin-bottom:16px}
 .card-label{font-size:15px;font-weight:700;color:var(--terra);margin-bottom:12px;display:flex;align-items:center;gap:8px}
 .card-label .icon{font-size:20px}
-/* Form elements */
 .sel-group{margin-bottom:12px}
 .sel-group label{display:block;font-size:15px;font-weight:500;color:var(--brown);margin-bottom:6px}
 select,input[type=text]{width:100%;height:52px;font-size:17px;font-family:inherit;border:2px solid #e0d5c8;border-radius:10px;padding:0 14px;background:#fff;color:var(--brown);appearance:none;-webkit-appearance:none;transition:border .2s}
 select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%234a403a' stroke-width='2.5'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 14px center;padding-right:40px}
 select:focus,input:focus{outline:none;border-color:var(--mustard);box-shadow:0 0 0 3px rgba(244,169,0,.18)}
 select:disabled{background:#f5f0ea;color:#b0a898}
-/* Button */
 .btn-search{width:100%;height:56px;font-size:19px;font-weight:700;font-family:inherit;border:none;border-radius:12px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;transition:all .2s}
 .btn-primary{background:linear-gradient(135deg,var(--mustard),#e6980a);color:#fff;box-shadow:0 4px 14px rgba(244,169,0,.35)}
 .btn-primary:active{transform:scale(.97)}
 .btn-primary:disabled{opacity:.5;cursor:not-allowed;transform:none}
-/* Loading */
 .spinner{display:inline-block;width:22px;height:22px;border:3px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:spin .6s linear infinite}
 @keyframes spin{to{transform:rotate(360deg)}}
-/* Results */
 .results-section{display:none}
 .results-title{font-size:18px;font-weight:700;text-align:center;color:var(--brown);margin-bottom:14px}
 .store-card{background:#fff;border-radius:var(--radius);box-shadow:var(--shadow);padding:20px;margin-bottom:14px;border-left:5px solid var(--mustard);position:relative;animation:slideUp .4s ease both}
+.store-card.featured{border-left-color:var(--terra);background:linear-gradient(135deg,#fff,#fff8ed);box-shadow:0 4px 18px rgba(193,102,107,.18)}
 .store-card:nth-child(2){animation-delay:.1s}
 .store-card:nth-child(3){animation-delay:.2s}
+.store-card:nth-child(4){animation-delay:.3s}
 @keyframes slideUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
 .store-rank{position:absolute;top:-10px;left:-10px;width:32px;height:32px;background:var(--mustard);color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:900;box-shadow:0 2px 6px rgba(244,169,0,.4)}
+.featured-badge{position:absolute;top:-10px;right:14px;background:linear-gradient(135deg,var(--terra),#a85358);color:#fff;font-size:12px;font-weight:700;padding:5px 12px;border-radius:20px;box-shadow:0 2px 8px rgba(193,102,107,.35);letter-spacing:1px}
 .store-name{font-size:18px;font-weight:700;color:var(--brown);margin-bottom:6px;padding-left:20px}
 .store-dist{display:inline-block;background:var(--gold-light);color:#a07800;font-size:13px;font-weight:700;padding:3px 10px;border-radius:20px;margin-bottom:8px}
+.store-card.featured .store-dist{background:var(--terra);color:#fff}
 .store-addr,.store-phone{font-size:15px;color:#6b5e52;margin-bottom:4px;display:flex;align-items:flex-start;gap:6px}
 .store-addr .ic,.store-phone .ic{flex-shrink:0;margin-top:2px}
-/* Action buttons */
 .act-row{display:flex;gap:8px;margin-top:14px;flex-wrap:wrap}
 .act-btn{flex:1;min-width:0;height:46px;font-size:14px;font-weight:700;font-family:inherit;border:none;border-radius:10px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:5px;text-decoration:none;transition:all .15s}
 .act-call{background:#fff;border:2px solid var(--terra);color:var(--terra)}
@@ -60,7 +57,6 @@ select:disabled{background:#f5f0ea;color:#b0a898}
 .act-drive:active{opacity:.85}
 .act-transit{background:var(--terra);color:#fff}
 .act-transit:active{opacity:.85}
-/* Directions text */
 .dir-info{margin-top:12px;padding:12px;background:var(--warm-white);border-radius:10px;font-size:14px;color:#6b5e52;line-height:1.6}
 .dir-info strong{color:var(--brown)}
 .dir-loading{color:#b0a898;font-style:italic}
@@ -71,12 +67,9 @@ select:disabled{background:#f5f0ea;color:#b0a898}
 .dir-detail-title{font-size:14px;font-weight:700;color:var(--terra);margin:8px 0 6px;padding-top:8px;border-top:1px solid #e8ddd0}
 .dir-steps{font-size:13px;line-height:1.7}
 .dir-step{padding:3px 0}
-/* Footer */
 .app-footer{text-align:center;padding:20px 0 10px;font-size:12px;color:#b0a898}
 .app-footer a{color:var(--terra);text-decoration:none}
-/* Error */
 .err-msg{background:#fff0f0;color:#c1666b;padding:12px;border-radius:10px;font-size:14px;text-align:center;margin-top:10px;display:none}
-/* Responsive */
 @media(max-width:360px){
   .app-title{font-size:22px}
   select,input[type=text]{height:48px;font-size:16px}
@@ -108,7 +101,7 @@ select:disabled{background:#f5f0ea;color:#b0a898}
   </div>
   <div class="app-footer"><a href="https://www.iohs.com.tw" target="_blank">IOHS 十分幸福</a>｜客服專線 02-2370-6060</div>
 </div>
-<script>const STORES = [{"id": 1, "region": "北部", "city": "台北市", "name": "宏康醫療器材　松山門市", "address": "台北市松山區光復北路172號", "phone": "(02)2545-0095"}, {"id": 2, "region": "北部", "city": "台北市", "name": "博登藥局-康之友藥局　萬華門市", "address": "台北市萬華區青年路20號", "phone": "(02)2301-1598"}, {"id": 3, "region": "北部", "city": "台北市", "name": "起辰物理治療所　大安區", "address": "台北市大安區信義路四段65號3樓", "phone": "(02)2233-1499"}, {"id": 4, "region": "北部", "city": "台北市", "name": "台安藥局　天母門市", "address": "台北市士林區天母西路34號", "phone": "(02)2872-8017"}, {"id": 5, "region": "北部", "city": "台北市", "name": "台安藥局　千盛門市", "address": "台北市士林區天母東路8巷84號", "phone": "(02)2872-0208"}, {"id": 6, "region": "北部", "city": "台北市", "name": "台安藥局　忠義門市", "address": "台北市士林區忠義街72號", "phone": "(02)2838-0685"}, {"id": 7, "region": "北部", "city": "台北市", "name": "台安藥局　致遠門市", "address": "台北市北投區致遠二路141號", "phone": "(02)2826-3580"}, {"id": 8, "region": "北部", "city": "台北市", "name": "台安藥局　前港門市", "address": "台北市士林區前港街28號", "phone": "(02)2883-1079"}, {"id": 9, "region": "北部", "city": "台北市", "name": "台安藥局　農安門市", "address": "台北市中山區農安街267號", "phone": "(02)2503-8205"}, {"id": 10, "region": "北部", "city": "台北市", "name": "台安藥局　吉林門市", "address": "台北市中山區吉林路399號", "phone": "(02)2596-9580"}, {"id": 11, "region": "北部", "city": "台北市", "name": "台安藥局　松德門市", "address": "台北市信義區松德路40號", "phone": "(02)8789-1622"}, {"id": 12, "region": "北部", "city": "台北市", "name": "台安藥局　信義門市", "address": "台北市信義區永吉路286號", "phone": "(02)2346-0521"}, {"id": 13, "region": "北部", "city": "台北市", "name": "台安藥局　中山門市", "address": "台北市士林區中山北路七段162號", "phone": "(02)2877-1887"}, {"id": 14, "region": "北部", "city": "台北市", "name": "台安藥局　景華門市", "address": "台北市文山區景華街69號", "phone": "(02)2931-0188"}, {"id": 15, "region": "北部", "city": "台北市", "name": "禾善長照家居生活館", "address": "台北市大同區延平北路三段87號", "phone": "(02)2592-6475"}, {"id": 16, "region": "北部", "city": "台北市", "name": "耆妙屋　新國泰門市", "address": "台北市大安區安和路一段72號", "phone": "(02)7746-2328"}, {"id": 17, "region": "北部", "city": "新北市", "name": "天賜藥局　三重門市", "address": "新北市三重區自強路一段85號1樓", "phone": "(02)2985-6852"}, {"id": 18, "region": "北部", "city": "新北市", "name": "松展多利藥局　蘆洲", "address": "新北市蘆洲區民族路161號", "phone": "(02)2288-2586"}, {"id": 19, "region": "北部", "city": "新北市", "name": "樂華康之友藥局　永和", "address": "新北市永和區中山路一段141號1樓", "phone": "(02)2233-1499"}, {"id": 20, "region": "北部", "city": "新北市", "name": "台安藥局　千樂門市", "address": "新北市中和區安樂路101-3號", "phone": "(02)2940-6029"}, {"id": 21, "region": "北部", "city": "新北市", "name": "台安藥局　忠孝門市", "address": "新北市三重區忠孝路一段181號", "phone": "(02)2937-1825"}, {"id": 22, "region": "北部", "city": "新北市", "name": "宏康醫療器材　新店", "address": "新北市新店區中正路566號1樓", "phone": "(02)8219-1687"}, {"id": 23, "region": "北部", "city": "新北市", "name": "信昌藥師藥局　板橋", "address": "新北市板橋區三民路二段202-9號", "phone": "(02)2951-0784"}, {"id": 24, "region": "北部", "city": "桃園市", "name": "樂居醫療器材有限公司　八德", "address": "桃園市八德區陸光街49號", "phone": "(03)374-1366"}, {"id": 25, "region": "北部", "city": "宜蘭縣", "name": "勝安堂醫療器材健康生活館　礁溪", "address": "宜蘭縣礁溪鄉中山路一段132號1樓", "phone": "(039)888-818"}, {"id": 26, "region": "中部", "city": "台中市", "name": "安全99　台中市西區", "address": "台中市北區進化北路378-9號", "phone": "(04)2376-8168"}, {"id": 27, "region": "中部", "city": "台中市", "name": "萬通藥局　千美門市", "address": "台中市南區美村南路263號", "phone": "(04)2260-2101"}, {"id": 28, "region": "中部", "city": "台中市", "name": "台安藥局　逢甲門市", "address": "台中市西屯區逢甲路162-5號", "phone": "(04)2452-4525"}, {"id": 29, "region": "中部", "city": "台中市", "name": "康護醫療器材行　大甲門市", "address": "台中市大甲區經國路346號", "phone": "0978-461-677"}, {"id": 30, "region": "中部", "city": "台中市", "name": "康護醫療器材行　沙鹿門市", "address": "台中市沙鹿區大同街36號", "phone": "0911-687-926"}, {"id": 31, "region": "中部", "city": "台中市", "name": "康護醫療器材行　梧棲門市", "address": "台中市梧棲區文華街192號", "phone": "0911-687-926"}, {"id": 32, "region": "中部", "city": "雲林縣", "name": "長和長照醫療用品　雲林縣虎尾", "address": "雲林縣虎尾鎮新生路147號", "phone": "(05)633-6958"}, {"id": 33, "region": "中部", "city": "雲林縣", "name": "上好藥局　永安門市", "address": "雲林縣斗六市永安路72號", "phone": "(05)533-1780"}, {"id": 34, "region": "中部", "city": "雲林縣", "name": "上好藥局　中山門市", "address": "雲林縣斗六市中山路213號", "phone": "(05)534-2486"}, {"id": 35, "region": "中部", "city": "雲林縣", "name": "上好藥局　古坑門市", "address": "雲林縣古坑鄉中山路136號", "phone": "(05)558-28318"}, {"id": 36, "region": "中部", "city": "雲林縣", "name": "上好藥局　上海門市", "address": "雲林縣斗六市上海路236號", "phone": "(05)537-1749"}, {"id": 37, "region": "南部", "city": "台南市", "name": "台安藥局　千多門市", "address": "台南市北區金華路五段1號", "phone": "(06)229-5533"}, {"id": 38, "region": "南部", "city": "台南市", "name": "台安藥局　開元門市", "address": "台南市北區開元路288號", "phone": "(06)276-3943"}, {"id": 39, "region": "南部", "city": "台南市", "name": "台安藥局　公園門市", "address": "台南市北區公園路840號", "phone": "(06)251-8402"}, {"id": 40, "region": "南部", "city": "台南市", "name": "台安藥局　北安門市", "address": "台南市北區北安路一段163號", "phone": "(06)251-8166"}, {"id": 41, "region": "南部", "city": "台南市", "name": "萬通藥局　安中門市", "address": "台南市安南區北安路二段363之24號", "phone": "(06)247-0015"}, {"id": 42, "region": "南部", "city": "台南市", "name": "萬通藥局　千薏門市", "address": "台南市南區金華路二段2號", "phone": "(06)263-8265"}, {"id": 43, "region": "南部", "city": "台南市", "name": "萬通藥局　永華門市", "address": "台南市中西區永華路一段184號", "phone": "(06)222-5531"}, {"id": 44, "region": "南部", "city": "台南市", "name": "台安藥局　健康門市", "address": "台南市南區健康路二段106號", "phone": "(06)223-3686"}, {"id": 45, "region": "南部", "city": "台南市", "name": "台安藥局　師大門市", "address": "台南市東區大同路一段163號", "phone": "(06)215-0011"}, {"id": 46, "region": "南部", "city": "台南市", "name": "台安藥局　嘉盛門市", "address": "台南市東區大同路一段173號", "phone": "(06)214-9133"}, {"id": 47, "region": "南部", "city": "台南市", "name": "萬通藥局　中華門市", "address": "台南市東區中華東路一段6號", "phone": "(06)209-2622"}, {"id": 48, "region": "南部", "city": "台南市", "name": "萬通藥局　崇明門市", "address": "台南市東區崇明路304號", "phone": "(06)290-0350"}, {"id": 49, "region": "南部", "city": "台南市", "name": "萬通藥局　東門門市", "address": "台南市東區中華東路三段2號", "phone": "(06)290-4377"}, {"id": 50, "region": "南部", "city": "台南市", "name": "台安藥局　南科門市", "address": "台南市新市區南科三路17號", "phone": "(06)505-5665"}, {"id": 51, "region": "南部", "city": "台南市", "name": "耆妙屋　東寧門市", "address": "台南市東區東寧路265號1樓", "phone": "(06)703-0328"}, {"id": 52, "region": "南部", "city": "高雄市", "name": "建昌藥局　高雄市三民區", "address": "高雄市三民區十全一路105號", "phone": "(07)323-2356"}, {"id": 53, "region": "南部", "city": "高雄市", "name": "安訢醫療儀器　高雄市阿蓮區", "address": "高雄市阿蓮區中正路523號", "phone": "(07)632-0632"}, {"id": 54, "region": "南部", "city": "高雄市", "name": "萬通藥局　建工門市", "address": "高雄市三民區建工路499-2號", "phone": "(07)380-7521"}, {"id": 55, "region": "南部", "city": "高雄市", "name": "萬通藥局　武廟門市", "address": "高雄市苓雅區武廟路133-1號", "phone": "(07)722-8893"}, {"id": 56, "region": "南部", "city": "屏東縣", "name": "台安藥局　崇蘭門市", "address": "屏東縣屏東市廣東路1490號", "phone": "(08)732-7225"}, {"id": 57, "region": "南部", "city": "屏東縣", "name": "台安藥局　驛站門市", "address": "屏東縣潮州鎮信義路111號", "phone": "(08)789-6006"}, {"id": 58, "region": "南部", "city": "屏東縣", "name": "萬通藥局　廣東門市", "address": "屏東縣屏東市廣東路623號", "phone": "(08)736-3988"}, {"id": 59, "region": "南部", "city": "屏東縣", "name": "台安藥局　林森門市", "address": "屏東縣屏東市林森路99號", "phone": "(08)732-7071"}];
+<script>const STORES = [{"id": 60, "region": "中部", "city": "台中市", "name": "康森林　家康健康生活館", "address": "台中市大里區中興路二段257號1樓", "phone": "0901-016-618", "isNew": true}, {"id": 1, "region": "北部", "city": "台北市", "name": "宏康醫療器材　松山門市", "address": "台北市松山區光復北路172號", "phone": "(02)2545-0095"}, {"id": 2, "region": "北部", "city": "台北市", "name": "博登藥局-康之友藥局　萬華門市", "address": "台北市萬華區青年路20號", "phone": "(02)2301-1598"}, {"id": 3, "region": "北部", "city": "台北市", "name": "起辰物理治療所　大安區", "address": "台北市大安區信義路四段65號3樓", "phone": "(02)2233-1499"}, {"id": 4, "region": "北部", "city": "台北市", "name": "台安藥局　天母門市", "address": "台北市士林區天母西路34號", "phone": "(02)2872-8017"}, {"id": 5, "region": "北部", "city": "台北市", "name": "台安藥局　千盛門市", "address": "台北市士林區天母東路8巷84號", "phone": "(02)2872-0208"}, {"id": 6, "region": "北部", "city": "台北市", "name": "台安藥局　忠義門市", "address": "台北市士林區忠義街72號", "phone": "(02)2838-0685"}, {"id": 7, "region": "北部", "city": "台北市", "name": "台安藥局　致遠門市", "address": "台北市北投區致遠二路141號", "phone": "(02)2826-3580"}, {"id": 8, "region": "北部", "city": "台北市", "name": "台安藥局　前港門市", "address": "台北市士林區前港街28號", "phone": "(02)2883-1079"}, {"id": 9, "region": "北部", "city": "台北市", "name": "台安藥局　農安門市", "address": "台北市中山區農安街267號", "phone": "(02)2503-8205"}, {"id": 10, "region": "北部", "city": "台北市", "name": "台安藥局　吉林門市", "address": "台北市中山區吉林路399號", "phone": "(02)2596-9580"}, {"id": 11, "region": "北部", "city": "台北市", "name": "台安藥局　松德門市", "address": "台北市信義區松德路40號", "phone": "(02)8789-1622"}, {"id": 12, "region": "北部", "city": "台北市", "name": "台安藥局　信義門市", "address": "台北市信義區永吉路286號", "phone": "(02)2346-0521"}, {"id": 13, "region": "北部", "city": "台北市", "name": "台安藥局　中山門市", "address": "台北市士林區中山北路七段162號", "phone": "(02)2877-1887"}, {"id": 14, "region": "北部", "city": "台北市", "name": "台安藥局　景華門市", "address": "台北市文山區景華街69號", "phone": "(02)2931-0188"}, {"id": 15, "region": "北部", "city": "台北市", "name": "禾善長照家居生活館", "address": "台北市大同區延平北路三段87號", "phone": "(02)2592-6475"}, {"id": 16, "region": "北部", "city": "台北市", "name": "耆妙屋　新國泰門市", "address": "台北市大安區安和路一段72號", "phone": "(02)7746-2328"}, {"id": 17, "region": "北部", "city": "新北市", "name": "天賜藥局　三重門市", "address": "新北市三重區自強路一段85號1樓", "phone": "(02)2985-6852"}, {"id": 18, "region": "北部", "city": "新北市", "name": "松展多利藥局　蘆洲", "address": "新北市蘆洲區民族路161號", "phone": "(02)2288-2586"}, {"id": 19, "region": "北部", "city": "新北市", "name": "樂華康之友藥局　永和", "address": "新北市永和區中山路一段141號1樓", "phone": "(02)2233-1499"}, {"id": 20, "region": "北部", "city": "新北市", "name": "台安藥局　千樂門市", "address": "新北市中和區安樂路101-3號", "phone": "(02)2940-6029"}, {"id": 21, "region": "北部", "city": "新北市", "name": "台安藥局　忠孝門市", "address": "新北市三重區忠孝路一段181號", "phone": "(02)2937-1825"}, {"id": 22, "region": "北部", "city": "新北市", "name": "宏康醫療器材　新店", "address": "新北市新店區中正路566號1樓", "phone": "(02)8219-1687"}, {"id": 23, "region": "北部", "city": "新北市", "name": "信昌藥師藥局　板橋", "address": "新北市板橋區三民路二段202-9號", "phone": "(02)2951-0784"}, {"id": 24, "region": "北部", "city": "桃園市", "name": "樂居醫療器材有限公司　八德", "address": "桃園市八德區陸光街49號", "phone": "(03)374-1366"}, {"id": 25, "region": "北部", "city": "宜蘭縣", "name": "勝安堂醫療器材健康生活館　礁溪", "address": "宜蘭縣礁溪鄉中山路一段132號1樓", "phone": "(039)888-818"}, {"id": 26, "region": "中部", "city": "台中市", "name": "安全99　台中市西區", "address": "台中市北區進化北路378-9號", "phone": "(04)2376-8168"}, {"id": 27, "region": "中部", "city": "台中市", "name": "萬通藥局　千美門市", "address": "台中市南區美村南路263號", "phone": "(04)2260-2101"}, {"id": 28, "region": "中部", "city": "台中市", "name": "台安藥局　逢甲門市", "address": "台中市西屯區逢甲路162-5號", "phone": "(04)2452-4525"}, {"id": 29, "region": "中部", "city": "台中市", "name": "康護醫療器材行　大甲門市", "address": "台中市大甲區經國路346號", "phone": "0978-461-677"}, {"id": 30, "region": "中部", "city": "台中市", "name": "康護醫療器材行　沙鹿門市", "address": "台中市沙鹿區大同街36號", "phone": "0911-687-926"}, {"id": 31, "region": "中部", "city": "台中市", "name": "康護醫療器材行　梧棲門市", "address": "台中市梧棲區文華街192號", "phone": "0911-687-926"}, {"id": 32, "region": "中部", "city": "雲林縣", "name": "長和長照醫療用品　雲林縣虎尾", "address": "雲林縣虎尾鎮新生路147號", "phone": "(05)633-6958"}, {"id": 33, "region": "中部", "city": "雲林縣", "name": "上好藥局　永安門市", "address": "雲林縣斗六市永安路72號", "phone": "(05)533-1780"}, {"id": 34, "region": "中部", "city": "雲林縣", "name": "上好藥局　中山門市", "address": "雲林縣斗六市中山路213號", "phone": "(05)534-2486"}, {"id": 35, "region": "中部", "city": "雲林縣", "name": "上好藥局　古坑門市", "address": "雲林縣古坑鄉中山路136號", "phone": "(05)558-28318"}, {"id": 36, "region": "中部", "city": "雲林縣", "name": "上好藥局　上海門市", "address": "雲林縣斗六市上海路236號", "phone": "(05)537-1749"}, {"id": 37, "region": "南部", "city": "台南市", "name": "台安藥局　千多門市", "address": "台南市北區金華路五段1號", "phone": "(06)229-5533"}, {"id": 38, "region": "南部", "city": "台南市", "name": "台安藥局　開元門市", "address": "台南市北區開元路288號", "phone": "(06)276-3943"}, {"id": 39, "region": "南部", "city": "台南市", "name": "台安藥局　公園門市", "address": "台南市北區公園路840號", "phone": "(06)251-8402"}, {"id": 40, "region": "南部", "city": "台南市", "name": "台安藥局　北安門市", "address": "台南市北區北安路一段163號", "phone": "(06)251-8166"}, {"id": 41, "region": "南部", "city": "台南市", "name": "萬通藥局　安中門市", "address": "台南市安南區北安路二段363之24號", "phone": "(06)247-0015"}, {"id": 42, "region": "南部", "city": "台南市", "name": "萬通藥局　千薏門市", "address": "台南市南區金華路二段2號", "phone": "(06)263-8265"}, {"id": 43, "region": "南部", "city": "台南市", "name": "萬通藥局　永華門市", "address": "台南市中西區永華路一段184號", "phone": "(06)222-5531"}, {"id": 44, "region": "南部", "city": "台南市", "name": "台安藥局　健康門市", "address": "台南市南區健康路二段106號", "phone": "(06)223-3686"}, {"id": 45, "region": "南部", "city": "台南市", "name": "台安藥局　師大門市", "address": "台南市東區大同路一段163號", "phone": "(06)215-0011"}, {"id": 46, "region": "南部", "city": "台南市", "name": "台安藥局　嘉盛門市", "address": "台南市東區大同路一段173號", "phone": "(06)214-9133"}, {"id": 47, "region": "南部", "city": "台南市", "name": "萬通藥局　中華門市", "address": "台南市東區中華東路一段6號", "phone": "(06)209-2622"}, {"id": 48, "region": "南部", "city": "台南市", "name": "萬通藥局　崇明門市", "address": "台南市東區崇明路304號", "phone": "(06)290-0350"}, {"id": 49, "region": "南部", "city": "台南市", "name": "萬通藥局　東門門市", "address": "台南市東區中華東路三段2號", "phone": "(06)290-4377"}, {"id": 50, "region": "南部", "city": "台南市", "name": "台安藥局　南科門市", "address": "台南市新市區南科三路17號", "phone": "(06)505-5665"}, {"id": 51, "region": "南部", "city": "台南市", "name": "耆妙屋　東寧門市", "address": "台南市東區東寧路265號1樓", "phone": "(06)703-0328"}, {"id": 52, "region": "南部", "city": "高雄市", "name": "建昌藥局　高雄市三民區", "address": "高雄市三民區十全一路105號", "phone": "(07)323-2356"}, {"id": 53, "region": "南部", "city": "高雄市", "name": "安訢醫療儀器　高雄市阿蓮區", "address": "高雄市阿蓮區中正路523號", "phone": "(07)632-0632"}, {"id": 54, "region": "南部", "city": "高雄市", "name": "萬通藥局　建工門市", "address": "高雄市三民區建工路499-2號", "phone": "(07)380-7521"}, {"id": 55, "region": "南部", "city": "高雄市", "name": "萬通藥局　武廟門市", "address": "高雄市苓雅區武廟路133-1號", "phone": "(07)722-8893"}, {"id": 56, "region": "南部", "city": "屏東縣", "name": "台安藥局　崇蘭門市", "address": "屏東縣屏東市廣東路1490號", "phone": "(08)732-7225"}, {"id": 57, "region": "南部", "city": "屏東縣", "name": "台安藥局　驛站門市", "address": "屏東縣潮州鎮信義路111號", "phone": "(08)789-6006"}, {"id": 58, "region": "南部", "city": "屏東縣", "name": "萬通藥局　廣東門市", "address": "屏東縣屏東市廣東路623號", "phone": "(08)736-3988"}, {"id": 59, "region": "南部", "city": "屏東縣", "name": "台安藥局　林森門市", "address": "屏東縣屏東市林森路99號", "phone": "(08)732-7071"}];
 </script>
 <script>const TW_DISTRICTS = {
 "台北市":["中正區","大同區","中山區","松山區","大安區","萬華區","信義區","士林區","北投區","內湖區","南港區","文山區"],
@@ -162,14 +155,13 @@ async function findNearest(uLat,uLng,n){
   var a=[],total=STORES.length,btn=document.getElementById('searchBtn');
   for(var i=0;i<total;i++){
     btn.innerHTML='<span class="spinner"></span> 比對門市中 ('+(i+1)+'/'+total+')...';
-    try{var c=await geoAddr(STORES[i].address);a.push({id:STORES[i].id,region:STORES[i].region,city:STORES[i].city,name:STORES[i].name,address:STORES[i].address,phone:STORES[i].phone,lat:c.lat,lng:c.lng,dist:haversine(uLat,uLng,c.lat,c.lng)})}catch(e){}
+    try{var c=await geoAddr(STORES[i].address);a.push({id:STORES[i].id,region:STORES[i].region,city:STORES[i].city,name:STORES[i].name,address:STORES[i].address,phone:STORES[i].phone,lat:c.lat,lng:c.lng,dist:haversine(uLat,uLng,c.lat,c.lng),isNew:!!STORES[i].isNew})}catch(e){}
   }
   a.sort(function(x,y){return x.dist-y.dist});return a.slice(0,n);
 }
 
 function mUrl(oLa,oLn,dest,m){return 'https://www.google.com/maps/dir/?api=1&origin='+oLa+','+oLn+'&destination='+encodeURIComponent(dest)+'&travelmode='+m}
 
-/* Parse transit steps from a leg */
 function parseTransitSteps(leg){
   var steps=[];
   for(var i=0;i<leg.steps.length;i++){
@@ -209,37 +201,21 @@ function fetchBothDirs(oLa,oLn,store){
     el.innerHTML=html;
   }
 
-  /* Driving - just need one route */
-  dirService.route({
-    origin:{lat:oLa,lng:oLn},destination:{lat:store.lat,lng:store.lng},
-    travelMode:'DRIVING'
-  },function(r,st){
+  dirService.route({origin:{lat:oLa,lng:oLn},destination:{lat:store.lat,lng:store.lng},travelMode:'DRIVING'},function(r,st){
     if(st==='OK'&&r.routes&&r.routes[0]){var l=r.routes[0].legs[0];driveText=l.distance.text+'，約 '+l.duration.text}
     else{driveText='請點擊按鈕查看'}
     driveDone=true;render();
   });
 
-  /* Transit - request ALL alternative routes, pick shortest */
-  dirService.route({
-    origin:{lat:oLa,lng:oLn},destination:{lat:store.lat,lng:store.lng},
-    travelMode:'TRANSIT',
-    provideRouteAlternatives:true
-  },function(r,st){
+  dirService.route({origin:{lat:oLa,lng:oLn},destination:{lat:store.lat,lng:store.lng},travelMode:'TRANSIT',provideRouteAlternatives:true},function(r,st){
     if(st==='OK'&&r.routes&&r.routes.length>0){
-      /* Find the route with shortest duration */
-      var bestIdx=0, bestSec=Infinity;
-      for(var i=0;i<r.routes.length;i++){
-        var leg=r.routes[i].legs[0];
-        var sec=leg.duration?leg.duration.value:Infinity;
-        if(sec<bestSec){bestSec=sec;bestIdx=i}
-      }
+      var bestIdx=0,bestSec=Infinity;
+      for(var i=0;i<r.routes.length;i++){var leg=r.routes[i].legs[0];var sec=leg.duration?leg.duration.value:Infinity;if(sec<bestSec){bestSec=sec;bestIdx=i}}
       var bestLeg=r.routes[bestIdx].legs[0];
       transitText=bestLeg.distance.text+'，約 '+bestLeg.duration.text;
       if(r.routes.length>1){transitText+=' （已從 '+r.routes.length+' 條路線中選出最快）'}
       transitSteps=parseTransitSteps(bestLeg);
-    }else{
-      transitText='請點擊按鈕查看';
-    }
+    }else{transitText='請點擊按鈕查看'}
     transitDone=true;render();
   });
 }
@@ -252,9 +228,10 @@ function renderResults(stores,uLa,uLn){
     var dt=s.dist<1?Math.round(s.dist*1000)+' 公尺':s.dist.toFixed(1)+' 公里';
     var pc=s.phone.replace(/[^\d+]/g,'');
     var div=document.createElement('div');div.className='store-card';
+    var displayName=(s.isNew?'\u2B50 ':'')+s.name;
     div.innerHTML=''
       +'<div class="store-rank">'+(i+1)+'</div>'
-      +'<div class="store-name">'+s.name+'</div>'
+      +'<div class="store-name">'+displayName+'</div>'
       +'<span class="store-dist">\uD83D\uDCCD 距離約 '+dt+'</span>'
       +'<div class="store-addr"><span class="ic">\uD83C\uDFE0</span><span>'+s.address+'</span></div>'
       +'<div class="store-phone"><span class="ic">\uD83D\uDCDE</span><span>'+s.phone+'</span></div>'
