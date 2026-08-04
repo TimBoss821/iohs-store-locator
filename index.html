@@ -1,265 +1,193 @@
-<!DOCTYPE html>
-<html lang="zh-TW">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-<title>IOHS 十分幸福｜找尋最近門市</title>
-<style>*{box-sizing:border-box;margin:0;padding:0}
-:root{
---mustard:#f4a900;--terra:#c1666b;--beige:#d4b896;--brown:#4a403a;
---cream:#fdf6ec;--warm-white:#fffaf3;--gold-light:#fceabb;
---shadow:0 2px 12px rgba(74,64,58,.12);
---radius:14px;
-}
-@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&display=swap');
-body{font-family:'Noto Sans TC',sans-serif;background:var(--cream);color:var(--brown);min-height:100vh;-webkit-text-size-adjust:100%}
-.app-wrap{max-width:480px;margin:0 auto;padding:16px 16px 40px}
-.app-header{text-align:center;padding:24px 0 18px;position:relative}
-.app-header::before{content:'';position:absolute;top:0;left:50%;transform:translateX(-50%);width:60px;height:4px;background:var(--mustard);border-radius:2px}
-.brand-name{font-size:13px;color:var(--terra);letter-spacing:2px;margin-bottom:4px;font-weight:500}
-.app-title{font-size:26px;font-weight:900;color:var(--brown);line-height:1.3}
-.app-subtitle{font-size:15px;color:#8a7a6d;margin-top:6px}
-.card{background:#fff;border-radius:var(--radius);box-shadow:var(--shadow);padding:22px 20px;margin-bottom:16px}
-.card-label{font-size:15px;font-weight:700;color:var(--terra);margin-bottom:12px;display:flex;align-items:center;gap:8px}
-.card-label .icon{font-size:20px}
-.sel-group{margin-bottom:12px}
-.sel-group label{display:block;font-size:15px;font-weight:500;color:var(--brown);margin-bottom:6px}
-select,input[type=text]{width:100%;height:52px;font-size:17px;font-family:inherit;border:2px solid #e0d5c8;border-radius:10px;padding:0 14px;background:#fff;color:var(--brown);appearance:none;-webkit-appearance:none;transition:border .2s}
-select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%234a403a' stroke-width='2.5'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 14px center;padding-right:40px}
-select:focus,input:focus{outline:none;border-color:var(--mustard);box-shadow:0 0 0 3px rgba(244,169,0,.18)}
-select:disabled{background:#f5f0ea;color:#b0a898}
-.btn-search{width:100%;height:56px;font-size:19px;font-weight:700;font-family:inherit;border:none;border-radius:12px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;transition:all .2s}
-.btn-primary{background:linear-gradient(135deg,var(--mustard),#e6980a);color:#fff;box-shadow:0 4px 14px rgba(244,169,0,.35)}
-.btn-primary:active{transform:scale(.97)}
-.btn-primary:disabled{opacity:.5;cursor:not-allowed;transform:none}
-.spinner{display:inline-block;width:22px;height:22px;border:3px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:spin .6s linear infinite}
-@keyframes spin{to{transform:rotate(360deg)}}
-.results-section{display:none}
-.results-title{font-size:18px;font-weight:700;text-align:center;color:var(--brown);margin-bottom:14px}
-.store-card{background:#fff;border-radius:var(--radius);box-shadow:var(--shadow);padding:20px;margin-bottom:14px;border-left:5px solid var(--mustard);position:relative;animation:slideUp .4s ease both}
-.store-card.featured{border-left-color:var(--terra);background:linear-gradient(135deg,#fff,#fff8ed);box-shadow:0 4px 18px rgba(193,102,107,.18)}
-.store-card:nth-child(2){animation-delay:.1s}
-.store-card:nth-child(3){animation-delay:.2s}
-.store-card:nth-child(4){animation-delay:.3s}
-@keyframes slideUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
-.store-rank{position:absolute;top:-10px;left:-10px;width:32px;height:32px;background:var(--mustard);color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:900;box-shadow:0 2px 6px rgba(244,169,0,.4)}
-.featured-badge{position:absolute;top:-10px;right:14px;background:linear-gradient(135deg,var(--terra),#a85358);color:#fff;font-size:12px;font-weight:700;padding:5px 12px;border-radius:20px;box-shadow:0 2px 8px rgba(193,102,107,.35);letter-spacing:1px}
-.store-name{font-size:18px;font-weight:700;color:var(--brown);margin-bottom:6px;padding-left:20px}
-.store-dist{display:inline-block;background:var(--gold-light);color:#a07800;font-size:13px;font-weight:700;padding:3px 10px;border-radius:20px;margin-bottom:8px}
-.store-card.featured .store-dist{background:var(--terra);color:#fff}
-.store-addr,.store-phone{font-size:15px;color:#6b5e52;margin-bottom:4px;display:flex;align-items:flex-start;gap:6px}
-.store-addr .ic,.store-phone .ic{flex-shrink:0;margin-top:2px}
-.act-row{display:flex;gap:8px;margin-top:14px;flex-wrap:wrap}
-.act-btn{flex:1;min-width:0;height:46px;font-size:14px;font-weight:700;font-family:inherit;border:none;border-radius:10px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:5px;text-decoration:none;transition:all .15s}
-.act-call{background:#fff;border:2px solid var(--terra);color:var(--terra)}
-.act-call:active{background:var(--terra);color:#fff}
-.act-drive{background:var(--brown);color:#fff}
-.act-drive:active{opacity:.85}
-.act-transit{background:var(--terra);color:#fff}
-.act-transit:active{opacity:.85}
-.dir-info{margin-top:12px;padding:12px;background:var(--warm-white);border-radius:10px;font-size:14px;color:#6b5e52;line-height:1.6}
-.dir-info strong{color:var(--brown)}
-.dir-loading{color:#b0a898;font-style:italic}
-.dir-summary{margin-bottom:10px}
-.dir-row{padding:6px 0;display:flex;align-items:center;gap:6px;font-size:15px}
-.dir-row:not(:last-child){border-bottom:1px dashed #e0d5c8}
-.dir-icon{font-size:18px;flex-shrink:0}
-.dir-detail-title{font-size:14px;font-weight:700;color:var(--terra);margin:8px 0 6px;padding-top:8px;border-top:1px solid #e8ddd0}
-.dir-steps{font-size:13px;line-height:1.7}
-.dir-step{padding:3px 0}
-.app-footer{text-align:center;padding:20px 0 10px;font-size:12px;color:#b0a898}
-.app-footer a{color:var(--terra);text-decoration:none}
-.err-msg{background:#fff0f0;color:#c1666b;padding:12px;border-radius:10px;font-size:14px;text-align:center;margin-top:10px;display:none}
-@media(max-width:360px){
-  .app-title{font-size:22px}
-  select,input[type=text]{height:48px;font-size:16px}
-  .btn-search{height:50px;font-size:17px}
-  .act-row{flex-direction:column}
-  .act-btn{height:44px}
-}
-</style>
-</head>
-<body>
-<div class="app-wrap">
-  <div class="app-header">
-    <div class="brand-name">IOHS 十分幸福</div>
-    <div class="app-title">找尋最近門市</div>
-    <div class="app-subtitle">輸入您的地址，幫您找到最近的合作門市</div>
-  </div>
-  <div class="card">
-    <div class="card-label"><span class="icon">📍</span>請輸入您的地址</div>
-    <div id="mapStatus" style="background:#fff8e1;color:#a07800;padding:10px;border-radius:8px;font-size:13px;margin-bottom:12px;text-align:center">⏳ Google Maps 載入中...</div>
-    <div class="sel-group"><label for="city">縣市</label><select id="city"><option value="">請選擇縣市</option></select></div>
-    <div class="sel-group"><label for="district">鄉鎮市區</label><select id="district" disabled><option value="">請先選擇縣市</option></select></div>
-    <div class="sel-group"><label for="street">路名與門牌（選填，填寫可提高精準度）</label><input type="text" id="street" placeholder="例：中正路100號"></div>
-    <button class="btn-search btn-primary" id="searchBtn" type="button">🔍 尋找最近門市</button>
-    <div class="err-msg" id="errMsg"></div>
-  </div>
-  <div class="results-section" id="results">
-    <div class="results-title">🏪 為您推薦最近的 3 間門市</div>
-    <div id="storeList"></div>
-  </div>
-  <div class="app-footer"><a href="https://www.iohs.com.tw" target="_blank">IOHS 十分幸福</a>｜客服專線 02-2370-6060</div>
+<div style="max-width:900px;margin:0 auto;padding:20px 16px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','PingFang TC','Microsoft JhengHei',sans-serif;">
+
+<div style="background:linear-gradient(135deg,#e6f7f5 0%,#d4f1ec 100%);border:2px solid #3BBFAD;border-radius:16px;padding:28px 20px;margin-bottom:28px;text-align:center;">
+<div style="font-size:22px;font-weight:bold;color:#2A9D8F;margin-bottom:10px;">🔍 找離你最近的門市</div>
+<div style="font-size:16px;color:#555;line-height:1.6;margin-bottom:16px;">輸入你的地址，自動幫你算出最近的 3 家門市<br>並告訴你開車或搭大眾運輸怎麼過去</div>
+<a href="https://timboss821.github.io/iohs-store-locator/index.html" target="_blank" style="display:inline-block;background:#3BBFAD;color:#ffffff;padding:14px 36px;border-radius:10px;text-decoration:none;font-size:17px;font-weight:bold;letter-spacing:1px;box-shadow:0 2px 8px rgba(59,191,173,0.35);">立即查詢最近門市 →</a>
 </div>
-<script>const STORES = [{"id":1,"region":"北部","city":"台北市","name":"宏康醫療器材_松山門市","address":"台北市松山區光復北路172號","phone":"(02)2545-0095","isNew":true},{"id":2,"region":"北部","city":"台北市","name":"明陽來村","address":"台北市北投區石牌路二段128號","phone":"(02)2825-0946","isNew":true},{"id":3,"region":"北部","city":"台北市","name":"博登藥局-康之友藥局_萬華門市","address":"台北市萬華區青年路20號","phone":"(02)2301-1598"},{"id":4,"region":"北部","city":"台北市","name":"起辰物理治療所_大安區","address":"台北市大安區信義路四段65號3樓","phone":"(02)2233-1499"},{"id":5,"region":"北部","city":"台北市","name":"台安藥局_天母門市","address":"台北市士林區天母西路34號","phone":"(02)2872-8017"},{"id":6,"region":"北部","city":"台北市","name":"台安藥局_千盛門市","address":"台北市士林區天母東路8巷84號","phone":"(02)2872-0208"},{"id":7,"region":"北部","city":"台北市","name":"台安藥局_忠義門市","address":"台北市士林區忠義街72號","phone":"(02)2838-0685"},{"id":8,"region":"北部","city":"台北市","name":"台安藥局_致遠門市","address":"台北市北投區致遠二路141號","phone":"(02)2826-3580"},{"id":9,"region":"北部","city":"台北市","name":"台安藥局_前港門市","address":"台北市士林區前港街28號","phone":"(02)2883-1079"},{"id":10,"region":"北部","city":"台北市","name":"台安藥局_農安門市","address":"台北市中山區農安街267號","phone":"(02)2503-8205"},{"id":11,"region":"北部","city":"台北市","name":"台安藥局_吉林門市","address":"台北市中山區吉林路399號","phone":"(02)2596-9580"},{"id":12,"region":"北部","city":"台北市","name":"台安藥局_松德門市","address":"台北市信義區松德路40號","phone":"(02)8789-1622"},{"id":13,"region":"北部","city":"台北市","name":"台安藥局_信義門市","address":"台北市信義區永吉路286號","phone":"(02)2346-0521"},{"id":14,"region":"北部","city":"台北市","name":"台安藥局_中山門市","address":"台北市士林區中山北路七段162號","phone":"(02)2877-1887"},{"id":15,"region":"北部","city":"台北市","name":"台安藥局_景華門市","address":"台北市文山區景華街69號","phone":"(02)2931-0188"},{"id":16,"region":"北部","city":"台北市","name":"禾善長照家居生活館","address":"台北市大同區延平北路三段87號","phone":"(02)2592-6475","isNew":true},{"id":17,"region":"北部","city":"台北市","name":"耆妙屋_新國泰門市","address":"台北市大安區安和路一段72號","phone":"(02)7746-2328","isNew":true},{"id":18,"region":"北部","city":"新北市","name":"天賜藥局_三重門市","address":"新北市三重區自強路一段85號1樓","phone":"(02)2985-6852"},{"id":19,"region":"北部","city":"新北市","name":"松展多利藥局_蘆洲","address":"新北市蘆洲區民族路161號","phone":"(02)2288-2586"},{"id":20,"region":"北部","city":"新北市","name":"樂華康之友藥局_永和","address":"新北市永和區中山路一段141號1樓","phone":"(02)2233-1499"},{"id":21,"region":"北部","city":"新北市","name":"台安藥局_千樂門市","address":"新北市中和區安樂路101-3號","phone":"(02)2940-6029"},{"id":22,"region":"北部","city":"新北市","name":"台安藥局_忠孝門市","address":"新北市三重區忠孝路一段181號","phone":"(02)2937-1825"},{"id":23,"region":"北部","city":"新北市","name":"宏康醫療器材_新店","address":"新北市新店區中正路566號1樓","phone":"(02)8219-1687","isNew":true},{"id":24,"region":"北部","city":"新北市","name":"信昌藥師藥局_板橋","address":"新北市板橋區三民路二段202-9號","phone":"(02)2951-0784"},{"id":25,"region":"北部","city":"桃園市","name":"樂居醫療器材有限公司_八德","address":"桃園市八德區陸光街49號","phone":"(03)374-1366"},{"id":26,"region":"北部","city":"宜蘭縣","name":"勝安堂醫療器材健康生活館_礁溪","address":"宜蘭縣礁溪鄉中山路一段132號1樓","phone":"(039)888-818"},{"id":27,"region":"中部","city":"台中市","name":"康森林 (家康健康生活館)","address":"臺中市大里區中興路二段257號1樓","phone":"0901-016-618","isNew":true},{"id":28,"region":"中部","city":"台中市","name":"安全99_台中市西區","address":"台中市北區進化北路378-9號","phone":"(04)2376-8168"},{"id":29,"region":"中部","city":"台中市","name":"萬通藥局_千美門市","address":"台中市南區美村南路263號","phone":"(04)2260-2101"},{"id":30,"region":"中部","city":"台中市","name":"台安藥局_逢甲門市","address":"台中市西屯區逢甲路162-5號","phone":"(04)2452-4525"},{"id":31,"region":"中部","city":"台中市","name":"康護醫療器材行_大甲門市","address":"台中市大甲區經國路346號","phone":"0978-461-677"},{"id":32,"region":"中部","city":"台中市","name":"康護醫療器材行_沙鹿門市","address":"台中市沙鹿區大同街36號","phone":"0911-687-926","isNew":true},{"id":33,"region":"中部","city":"台中市","name":"康護醫療器材行_梧棲門市","address":"台中市梧棲區文華街192號","phone":"0911-687-926"},{"id":34,"region":"中部","city":"雲林縣","name":"長和長照醫療用品_雲林縣虎尾","address":"雲林縣虎尾鎮新生路147號","phone":"(05)633-6958"},{"id":35,"region":"中部","city":"雲林縣","name":"上好藥局_永安門市","address":"雲林縣斗六市永安路72號","phone":"(05)533-1780"},{"id":36,"region":"中部","city":"雲林縣","name":"上好藥局_中山門市","address":"雲林縣斗六市中山路213號","phone":"(05)534-2486"},{"id":37,"region":"中部","city":"雲林縣","name":"上好藥局_古坑門市","address":"雲林縣古坑鄉中山路136號","phone":"(05)558-28318"},{"id":38,"region":"中部","city":"雲林縣","name":"上好藥局_上海門市","address":"雲林縣斗六市上海路236號","phone":"(05)537-1749"},{"id":39,"region":"南部","city":"台南市","name":"台安藥局_千多門市","address":"台南市北區金華路五段1號","phone":"(06)229-5533"},{"id":40,"region":"南部","city":"台南市","name":"台安藥局_開元門市","address":"台南市北區開元路288號","phone":"(06)276-3943"},{"id":41,"region":"南部","city":"台南市","name":"台安藥局_公園門市","address":"台南市北區公園路840號","phone":"(06)251-8402"},{"id":42,"region":"南部","city":"台南市","name":"台安藥局_北安門市","address":"台南市北區北安路一段163號","phone":"(06)251-8166"},{"id":43,"region":"南部","city":"台南市","name":"萬通藥局_安中門市","address":"台南市安南區北安路二段363之24號","phone":"(06)247-0015"},{"id":44,"region":"南部","city":"台南市","name":"萬通藥局_千薏門市","address":"台南市南區金華路二段2號","phone":"(06)263-8265"},{"id":45,"region":"南部","city":"台南市","name":"萬通藥局_永華門市","address":"台南市中西區永華路一段184號","phone":"(06)222-5531"},{"id":46,"region":"南部","city":"台南市","name":"台安藥局_健康門市","address":"台南市南區健康路二段106號","phone":"(06)223-3686"},{"id":47,"region":"南部","city":"台南市","name":"台安藥局_師大門市","address":"台南市東區大同路一段163號","phone":"(06)215-0011"},{"id":48,"region":"南部","city":"台南市","name":"台安藥局_嘉盛門市","address":"台南市東區大同路一段173號","phone":"(06)214-9133"},{"id":49,"region":"南部","city":"台南市","name":"萬通藥局_中華門市","address":"台南市東區中華東路一段6號","phone":"(06)209-2622"},{"id":50,"region":"南部","city":"台南市","name":"萬通藥局_崇明門市","address":"台南市東區崇明路304號","phone":"(06)290-0350"},{"id":51,"region":"南部","city":"台南市","name":"萬通藥局_東門門市","address":"台南市東區中華東路三段2號","phone":"(06)290-4377"},{"id":52,"region":"南部","city":"台南市","name":"台安藥局_南科門市","address":"台南市新市區南科三路17號","phone":"(06)505-5665"},{"id":53,"region":"南部","city":"台南市","name":"耆妙屋_東寧門市","address":"台南市東區東寧路265號1樓","phone":"(06)703-0328"},{"id":54,"region":"南部","city":"高雄市","name":"建昌藥局_高雄市三民區","address":"高雄市三民區十全一路105號","phone":"(07)323-2356"},{"id":55,"region":"南部","city":"高雄市","name":"安訢醫療儀器_高雄市阿蓮區","address":"高雄市阿蓮區中正路523號","phone":"(07)632-0632"},{"id":56,"region":"南部","city":"高雄市","name":"萬通藥局_建工門市","address":"高雄市三民區建工路499-2號","phone":"(07)380-7521"},{"id":57,"region":"南部","city":"高雄市","name":"萬通藥局_武廟門市","address":"高雄市苓雅區武廟路133-1號","phone":"(07)722-8893"},{"id":58,"region":"南部","city":"屏東縣","name":"台安藥局_崇蘭門市","address":"屏東縣屏東市廣東路1490號","phone":"(08)732-7225"},{"id":59,"region":"南部","city":"屏東縣","name":"台安藥局_驛站門市","address":"屏東縣潮州鎮信義路111號","phone":"(08)789-6006"},{"id":60,"region":"南部","city":"屏東縣","name":"萬通藥局_廣東門市","address":"屏東縣屏東市廣東路623號","phone":"(08)736-3988"},{"id":61,"region":"南部","city":"屏東縣","name":"台安藥局_林森門市","address":"屏東縣屏東市林森路99號","phone":"(08)732-7071"}];
-</script>
-<script>const TW_DISTRICTS = {
-"台北市":["中正區","大同區","中山區","松山區","大安區","萬華區","信義區","士林區","北投區","內湖區","南港區","文山區"],
-"新北市":["板橋區","三重區","中和區","永和區","新莊區","新店區","土城區","蘆洲區","汐止區","樹林區","鶯歌區","三峽區","淡水區","瑞芳區","五股區","泰山區","林口區","深坑區","石碇區","坪林區","三芝區","石門區","八里區","平溪區","雙溪區","貢寮區","金山區","萬里區","烏來區"],
-"桃園市":["桃園區","中壢區","大溪區","楊梅區","蘆竹區","大園區","龜山區","八德區","龍潭區","平鎮區","新屋區","觀音區","復興區"],
-"台中市":["中區","東區","南區","西區","北區","北屯區","西屯區","南屯區","太平區","大里區","霧峰區","烏日區","豐原區","后里區","石岡區","東勢區","和平區","新社區","潭子區","大雅區","神岡區","大肚區","沙鹿區","龍井區","梧棲區","清水區","大甲區","外埔區","大安區"],
-"台南市":["中西區","東區","南區","北區","安平區","安南區","永康區","歸仁區","新化區","左鎮區","玉井區","楠西區","南化區","仁德區","關廟區","龍崎區","官田區","麻豆區","佳里區","西港區","七股區","將軍區","學甲區","北門區","新營區","後壁區","白河區","東山區","六甲區","下營區","柳營區","鹽水區","善化區","大內區","山上區","新市區","安定區"],
-"高雄市":["楠梓區","左營區","鼓山區","三民區","鹽埕區","前金區","新興區","苓雅區","前鎮區","旗津區","小港區","鳳山區","林園區","大寮區","大樹區","大社區","仁武區","鳥松區","岡山區","橋頭區","燕巢區","田寮區","阿蓮區","路竹區","湖內區","茄萣區","永安區","彌陀區","梓官區","旗山區","美濃區","六龜區","甲仙區","杉林區","內門區","茂林區","桃源區","那瑪夏區"],
-"宜蘭縣":["宜蘭市","羅東鎮","蘇澳鎮","頭城鎮","礁溪鄉","壯圍鄉","員山鄉","冬山鄉","五結鄉","三星鄉","大同鄉","南澳鄉"],
-"雲林縣":["斗六市","斗南鎮","虎尾鎮","西螺鎮","土庫鎮","北港鎮","古坑鄉","大埤鄉","莿桐鄉","林內鄉","二崙鄉","崙背鄉","麥寮鄉","東勢鄉","褒忠鄉","台西鄉","元長鄉","四湖鄉","口湖鄉","水林鄉"],
-"屏東縣":["屏東市","潮州鎮","東港鎮","恆春鎮","萬丹鄉","長治鄉","麟洛鄉","九如鄉","里港鄉","鹽埔鄉","高樹鄉","萬巒鄉","內埔鄉","竹田鄉","新埤鄉","枋寮鄉","新園鄉","崁頂鄉","林邊鄉","南州鄉","佳冬鄉","琉球鄉","車城鄉","滿州鄉","枋山鄉","霧台鄉","瑪家鄉","泰武鄉","來義鄉","春日鄉","獅子鄉","牡丹鄉","三地門鄉"],
-"基隆市":["仁愛區","信義區","中正區","中山區","安樂區","暖暖區","七堵區"],
-"新竹市":["東區","北區","香山區"],
-"新竹縣":["竹北市","竹東鎮","新埔鎮","關西鎮","湖口鄉","新豐鄉","芎林鄉","橫山鄉","北埔鄉","寶山鄉","峨眉鄉","尖石鄉","五峰鄉"],
-"苗栗縣":["苗栗市","頭份市","竹南鎮","後龍鎮","通霄鎮","苑裡鎮","卓蘭鎮","造橋鄉","西湖鄉","頭屋鄉","公館鄉","銅鑼鄉","三義鄉","大湖鄉","獅潭鄉","三灣鄉","南庄鄉","泰安鄉"],
-"彰化縣":["彰化市","員林市","鹿港鎮","和美鎮","北斗鎮","溪湖鎮","田中鎮","二林鎮","線西鄉","伸港鄉","福興鄉","秀水鄉","花壇鄉","芬園鄉","大村鄉","埔鹽鄉","埔心鄉","永靖鄉","社頭鄉","二水鄉","田尾鄉","埤頭鄉","芳苑鄉","大城鄉","竹塘鄉","溪州鄉"],
-"南投縣":["南投市","埔里鎮","草屯鎮","竹山鎮","集集鎮","名間鄉","鹿谷鄉","中寮鄉","魚池鄉","國姓鄉","水里鄉","信義鄉","仁愛鄉"],
-"嘉義市":["東區","西區"],
-"嘉義縣":["太保市","朴子市","布袋鎮","大林鎮","民雄鄉","溪口鄉","新港鄉","六腳鄉","東石鄉","義竹鄉","鹿草鄉","水上鄉","中埔鄉","竹崎鄉","梅山鄉","番路鄉","大埔鄉","阿里山鄉"],
-"花蓮縣":["花蓮市","鳳林鎮","玉里鎮","新城鄉","吉安鄉","壽豐鄉","光復鄉","豐濱鄉","瑞穗鄉","富里鄉","秀林鄉","萬榮鄉","卓溪鄉"],
-"台東縣":["台東市","成功鎮","關山鎮","卑南鄉","大武鄉","太麻里鄉","東河鄉","長濱鄉","鹿野鄉","池上鄉","綠島鄉","延平鄉","海端鄉","達仁鄉","金峰鄉","蘭嶼鄉"],
-"澎湖縣":["馬公市","湖西鄉","白沙鄉","西嶼鄉","望安鄉","七美鄉"],
-"金門縣":["金城鎮","金湖鎮","金沙鎮","金寧鄉","烈嶼鄉","烏坵鄉"],
-"連江縣":["南竿鄉","北竿鄉","莒光鄉","東引鄉"]
-};
-</script>
-<script>var geocoder=null,dirService=null,mapsReady=false;
 
-function onMapsReady(){
-  try{geocoder=new google.maps.Geocoder();dirService=new google.maps.DirectionsService();mapsReady=true;document.getElementById('mapStatus').style.display='none'}
-  catch(e){document.getElementById('mapStatus').textContent='Google Maps 載入異常：'+e.message}
-}
-function onMapsError(){document.getElementById('mapStatus').textContent='Google Maps 載入失敗，請確認 API Key 及網路連線'}
+<div style="font-size:15px;color:#999;margin-bottom:28px;text-align:center;">或從下方列表直接查看全台 28 家合作門市</div>
 
-document.addEventListener('DOMContentLoaded',function(){
-  var cityEl=document.getElementById('city'),distEl=document.getElementById('district');
-  var keys=Object.keys(TW_DISTRICTS);
-  for(var i=0;i<keys.length;i++){var o=document.createElement('option');o.value=keys[i];o.textContent=keys[i];cityEl.appendChild(o)}
-  cityEl.addEventListener('change',function(){
-    distEl.innerHTML='<option value="">請選擇鄉鎮市區</option>';distEl.disabled=!cityEl.value;
-    if(cityEl.value&&TW_DISTRICTS[cityEl.value]){var ds=TW_DISTRICTS[cityEl.value];for(var j=0;j<ds.length;j++){var o2=document.createElement('option');o2.value=ds[j];o2.textContent=ds[j];distEl.appendChild(o2)}}
-  });
-  document.getElementById('searchBtn').addEventListener('click',function(){doSearch()});
-});
+<div style="margin-bottom:36px;">
+<div style="font-size:22px;font-weight:bold;color:#2A9D8F;border-bottom:3px solid #3BBFAD;padding-bottom:10px;margin-bottom:20px;">【北部】 <span style="font-size:15px;color:#999;font-weight:normal;">13 家門市</span></div>
+<div style="font-size:18px;font-weight:bold;color:#444;margin:20px 0 12px 0;padding-bottom:6px;border-bottom:1px solid #e0e0e0;">台北市 <span style="font-size:14px;color:#aaa;font-weight:normal;">(6 家)</span></div>
+<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px;margin-bottom:8px;">
+<div style="background:linear-gradient(135deg,#fff9e6 0%,#fff3cc 100%);border:2px solid #F2C94C;border-radius:10px;padding:14px 16px;position:relative;">
+<div style="font-size:16px;font-weight:bold;color:#2A9D8F;margin-bottom:6px;">⭐ 宏康醫療器材_松山門市 <span style="display:inline-block;background:#F2C94C;color:#7a6200;font-size:11px;padding:2px 8px;border-radius:4px;margin-left:6px;font-weight:bold;vertical-align:middle;">推薦門市</span></div>
+<div style="font-size:15px;color:#666;margin-bottom:4px;line-height:1.5;">📍 <a href="https://www.google.com/maps/search/%E5%8F%B0%E5%8C%97%E5%B8%82%E6%9D%BE%E5%B1%B1%E5%8D%80%E5%85%89%E5%BE%A9%E5%8C%97%E8%B7%AF172%E8%99%9F" target="_blank" style="color:#2A9D8F;text-decoration:none;">台北市松山區光復北路172號</a></div>
+<div style="font-size:15px;color:#666;">📞 <a href="tel:022545-0095" style="color:#2A9D8F;text-decoration:none;">(02)2545-0095</a></div>
+</div>
+<div style="background:linear-gradient(135deg,#fff9e6 0%,#fff3cc 100%);border:2px solid #F2C94C;border-radius:10px;padding:14px 16px;position:relative;">
+<div style="font-size:16px;font-weight:bold;color:#2A9D8F;margin-bottom:6px;">⭐ 明陽來村 <span style="display:inline-block;background:#F2C94C;color:#7a6200;font-size:11px;padding:2px 8px;border-radius:4px;margin-left:6px;font-weight:bold;vertical-align:middle;">推薦門市</span></div>
+<div style="font-size:15px;color:#666;margin-bottom:4px;line-height:1.5;">📍 <a href="https://www.google.com/maps/search/%E5%8F%B0%E5%8C%97%E5%B8%82%E5%8C%97%E6%8A%95%E5%8D%80%E7%9F%B3%E7%89%8C%E8%B7%AF%E4%BA%8C%E6%AE%B5128%E8%99%9F" target="_blank" style="color:#2A9D8F;text-decoration:none;">台北市北投區石牌路二段128號</a></div>
+<div style="font-size:15px;color:#666;">📞 <a href="tel:022825-0946" style="color:#2A9D8F;text-decoration:none;">(02)2825-0946</a></div>
+</div>
+<div style="background:#fafafa;border:1px solid #eee;border-radius:10px;padding:14px 16px;">
+<div style="font-size:16px;font-weight:bold;color:#333;margin-bottom:6px;">博登藥局-康之友藥局_萬華門市</div>
+<div style="font-size:15px;color:#666;margin-bottom:4px;line-height:1.5;">📍 <a href="https://www.google.com/maps/search/%E5%8F%B0%E5%8C%97%E5%B8%82%E8%90%AC%E8%8F%AF%E5%8D%80%E9%9D%92%E5%B9%B4%E8%B7%AF20%E8%99%9F" target="_blank" style="color:#2A9D8F;text-decoration:none;">台北市萬華區青年路20號</a></div>
+<div style="font-size:15px;color:#666;">📞 <a href="tel:022301-1598" style="color:#2A9D8F;text-decoration:none;">(02)2301-1598</a></div>
+</div>
+<div style="background:#fafafa;border:1px solid #eee;border-radius:10px;padding:14px 16px;">
+<div style="font-size:16px;font-weight:bold;color:#333;margin-bottom:6px;">起辰物理治療所_大安區</div>
+<div style="font-size:15px;color:#666;margin-bottom:4px;line-height:1.5;">📍 <a href="https://www.google.com/maps/search/%E5%8F%B0%E5%8C%97%E5%B8%82%E5%A4%A7%E5%AE%89%E5%8D%80%E4%BF%A1%E7%BE%A9%E8%B7%AF%E5%9B%9B%E6%AE%B565%E8%99%9F3%E6%A8%93" target="_blank" style="color:#2A9D8F;text-decoration:none;">台北市大安區信義路四段65號3樓</a></div>
+<div style="font-size:15px;color:#666;">📞 <a href="tel:022233-1499" style="color:#2A9D8F;text-decoration:none;">(02)2233-1499</a></div>
+</div>
+<div style="background:linear-gradient(135deg,#fff9e6 0%,#fff3cc 100%);border:2px solid #F2C94C;border-radius:10px;padding:14px 16px;position:relative;">
+<div style="font-size:16px;font-weight:bold;color:#2A9D8F;margin-bottom:6px;">⭐ 禾善長照家居生活館 <span style="display:inline-block;background:#F2C94C;color:#7a6200;font-size:11px;padding:2px 8px;border-radius:4px;margin-left:6px;font-weight:bold;vertical-align:middle;">推薦門市</span></div>
+<div style="font-size:15px;color:#666;margin-bottom:4px;line-height:1.5;">📍 <a href="https://www.google.com/maps/search/%E5%8F%B0%E5%8C%97%E5%B8%82%E5%A4%A7%E5%90%8C%E5%8D%80%E5%BB%B6%E5%B9%B3%E5%8C%97%E8%B7%AF%E4%B8%89%E6%AE%B587%E8%99%9F" target="_blank" style="color:#2A9D8F;text-decoration:none;">台北市大同區延平北路三段87號</a></div>
+<div style="font-size:15px;color:#666;">📞 <a href="tel:022592-6475" style="color:#2A9D8F;text-decoration:none;">(02)2592-6475</a></div>
+</div>
+<div style="background:linear-gradient(135deg,#fff9e6 0%,#fff3cc 100%);border:2px solid #F2C94C;border-radius:10px;padding:14px 16px;position:relative;">
+<div style="font-size:16px;font-weight:bold;color:#2A9D8F;margin-bottom:6px;">⭐ 耆妙屋_新國泰門市 <span style="display:inline-block;background:#F2C94C;color:#7a6200;font-size:11px;padding:2px 8px;border-radius:4px;margin-left:6px;font-weight:bold;vertical-align:middle;">推薦門市</span></div>
+<div style="font-size:15px;color:#666;margin-bottom:4px;line-height:1.5;">📍 <a href="https://www.google.com/maps/search/%E5%8F%B0%E5%8C%97%E5%B8%82%E5%A4%A7%E5%AE%89%E5%8D%80%E5%AE%89%E5%92%8C%E8%B7%AF%E4%B8%80%E6%AE%B572%E8%99%9F" target="_blank" style="color:#2A9D8F;text-decoration:none;">台北市大安區安和路一段72號</a></div>
+<div style="font-size:15px;color:#666;">📞 <a href="tel:027746-2328" style="color:#2A9D8F;text-decoration:none;">(02)7746-2328</a></div>
+</div>
+</div>
+<div style="font-size:18px;font-weight:bold;color:#444;margin:20px 0 12px 0;padding-bottom:6px;border-bottom:1px solid #e0e0e0;">新北市 <span style="font-size:14px;color:#aaa;font-weight:normal;">(5 家)</span></div>
+<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px;margin-bottom:8px;">
+<div style="background:#fafafa;border:1px solid #eee;border-radius:10px;padding:14px 16px;">
+<div style="font-size:16px;font-weight:bold;color:#333;margin-bottom:6px;">天賜藥局_三重門市</div>
+<div style="font-size:15px;color:#666;margin-bottom:4px;line-height:1.5;">📍 <a href="https://www.google.com/maps/search/%E6%96%B0%E5%8C%97%E5%B8%82%E4%B8%89%E9%87%8D%E5%8D%80%E8%87%AA%E5%BC%B7%E8%B7%AF%E4%B8%80%E6%AE%B585%E8%99%9F1%E6%A8%93" target="_blank" style="color:#2A9D8F;text-decoration:none;">新北市三重區自強路一段85號1樓</a></div>
+<div style="font-size:15px;color:#666;">📞 <a href="tel:022985-6852" style="color:#2A9D8F;text-decoration:none;">(02)2985-6852</a></div>
+</div>
+<div style="background:#fafafa;border:1px solid #eee;border-radius:10px;padding:14px 16px;">
+<div style="font-size:16px;font-weight:bold;color:#333;margin-bottom:6px;">松展多利藥局_蘆洲</div>
+<div style="font-size:15px;color:#666;margin-bottom:4px;line-height:1.5;">📍 <a href="https://www.google.com/maps/search/%E6%96%B0%E5%8C%97%E5%B8%82%E8%98%86%E6%B4%B2%E5%8D%80%E6%B0%91%E6%97%8F%E8%B7%AF161%E8%99%9F" target="_blank" style="color:#2A9D8F;text-decoration:none;">新北市蘆洲區民族路161號</a></div>
+<div style="font-size:15px;color:#666;">📞 <a href="tel:022288-2586" style="color:#2A9D8F;text-decoration:none;">(02)2288-2586</a></div>
+</div>
+<div style="background:#fafafa;border:1px solid #eee;border-radius:10px;padding:14px 16px;">
+<div style="font-size:16px;font-weight:bold;color:#333;margin-bottom:6px;">樂華康之友藥局_永和</div>
+<div style="font-size:15px;color:#666;margin-bottom:4px;line-height:1.5;">📍 <a href="https://www.google.com/maps/search/%E6%96%B0%E5%8C%97%E5%B8%82%E6%B0%B8%E5%92%8C%E5%8D%80%E4%B8%AD%E5%B1%B1%E8%B7%AF%E4%B8%80%E6%AE%B5141%E8%99%9F1%E6%A8%93" target="_blank" style="color:#2A9D8F;text-decoration:none;">新北市永和區中山路一段141號1樓</a></div>
+<div style="font-size:15px;color:#666;">📞 <a href="tel:022233-1499" style="color:#2A9D8F;text-decoration:none;">(02)2233-1499</a></div>
+</div>
+<div style="background:linear-gradient(135deg,#fff9e6 0%,#fff3cc 100%);border:2px solid #F2C94C;border-radius:10px;padding:14px 16px;position:relative;">
+<div style="font-size:16px;font-weight:bold;color:#2A9D8F;margin-bottom:6px;">⭐ 宏康醫療器材_新店 <span style="display:inline-block;background:#F2C94C;color:#7a6200;font-size:11px;padding:2px 8px;border-radius:4px;margin-left:6px;font-weight:bold;vertical-align:middle;">推薦門市</span></div>
+<div style="font-size:15px;color:#666;margin-bottom:4px;line-height:1.5;">📍 <a href="https://www.google.com/maps/search/%E6%96%B0%E5%8C%97%E5%B8%82%E6%96%B0%E5%BA%97%E5%8D%80%E4%B8%AD%E6%AD%A3%E8%B7%AF566%E8%99%9F1%E6%A8%93" target="_blank" style="color:#2A9D8F;text-decoration:none;">新北市新店區中正路566號1樓</a></div>
+<div style="font-size:15px;color:#666;">📞 <a href="tel:028219-1687" style="color:#2A9D8F;text-decoration:none;">(02)8219-1687</a></div>
+</div>
+<div style="background:#fafafa;border:1px solid #eee;border-radius:10px;padding:14px 16px;">
+<div style="font-size:16px;font-weight:bold;color:#333;margin-bottom:6px;">信昌藥師藥局_板橋</div>
+<div style="font-size:15px;color:#666;margin-bottom:4px;line-height:1.5;">📍 <a href="https://www.google.com/maps/search/%E6%96%B0%E5%8C%97%E5%B8%82%E6%9D%BF%E6%A9%8B%E5%8D%80%E4%B8%89%E6%B0%91%E8%B7%AF%E4%BA%8C%E6%AE%B5202-9%E8%99%9F" target="_blank" style="color:#2A9D8F;text-decoration:none;">新北市板橋區三民路二段202-9號</a></div>
+<div style="font-size:15px;color:#666;">📞 <a href="tel:022951-0784" style="color:#2A9D8F;text-decoration:none;">(02)2951-0784</a></div>
+</div>
+</div>
+<div style="font-size:18px;font-weight:bold;color:#444;margin:20px 0 12px 0;padding-bottom:6px;border-bottom:1px solid #e0e0e0;">桃園市 <span style="font-size:14px;color:#aaa;font-weight:normal;">(1 家)</span></div>
+<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px;margin-bottom:8px;">
+<div style="background:#fafafa;border:1px solid #eee;border-radius:10px;padding:14px 16px;">
+<div style="font-size:16px;font-weight:bold;color:#333;margin-bottom:6px;">樂居醫療器材有限公司_八德</div>
+<div style="font-size:15px;color:#666;margin-bottom:4px;line-height:1.5;">📍 <a href="https://www.google.com/maps/search/%E6%A1%83%E5%9C%92%E5%B8%82%E5%85%AB%E5%BE%B7%E5%8D%80%E9%99%B8%E5%85%89%E8%A1%9749%E8%99%9F" target="_blank" style="color:#2A9D8F;text-decoration:none;">桃園市八德區陸光街49號</a></div>
+<div style="font-size:15px;color:#666;">📞 <a href="tel:03374-1366" style="color:#2A9D8F;text-decoration:none;">(03)374-1366</a></div>
+</div>
+</div>
+<div style="font-size:18px;font-weight:bold;color:#444;margin:20px 0 12px 0;padding-bottom:6px;border-bottom:1px solid #e0e0e0;">宜蘭縣 <span style="font-size:14px;color:#aaa;font-weight:normal;">(1 家)</span></div>
+<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px;margin-bottom:8px;">
+<div style="background:#fafafa;border:1px solid #eee;border-radius:10px;padding:14px 16px;">
+<div style="font-size:16px;font-weight:bold;color:#333;margin-bottom:6px;">勝安堂醫療器材健康生活館_礁溪</div>
+<div style="font-size:15px;color:#666;margin-bottom:4px;line-height:1.5;">📍 <a href="https://www.google.com/maps/search/%E5%AE%9C%E8%98%AD%E7%B8%A3%E7%A4%81%E6%BA%AA%E9%84%89%E4%B8%AD%E5%B1%B1%E8%B7%AF%E4%B8%80%E6%AE%B5132%E8%99%9F1%E6%A8%93" target="_blank" style="color:#2A9D8F;text-decoration:none;">宜蘭縣礁溪鄉中山路一段132號1樓</a></div>
+<div style="font-size:15px;color:#666;">📞 <a href="tel:039888-818" style="color:#2A9D8F;text-decoration:none;">(039)888-818</a></div>
+</div>
+</div>
+</div>
+<div style="margin-bottom:36px;">
+<div style="font-size:22px;font-weight:bold;color:#2A9D8F;border-bottom:3px solid #3BBFAD;padding-bottom:10px;margin-bottom:20px;">【中部】 <span style="font-size:15px;color:#999;font-weight:normal;">10 家門市</span></div>
+<div style="font-size:18px;font-weight:bold;color:#444;margin:20px 0 12px 0;padding-bottom:6px;border-bottom:1px solid #e0e0e0;">台中市 <span style="font-size:14px;color:#aaa;font-weight:normal;">(5 家)</span></div>
+<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px;margin-bottom:8px;">
+<div style="background:linear-gradient(135deg,#fff9e6 0%,#fff3cc 100%);border:2px solid #F2C94C;border-radius:10px;padding:14px 16px;position:relative;">
+<div style="font-size:16px;font-weight:bold;color:#2A9D8F;margin-bottom:6px;">⭐ 康森林 (家康健康生活館) <span style="display:inline-block;background:#F2C94C;color:#7a6200;font-size:11px;padding:2px 8px;border-radius:4px;margin-left:6px;font-weight:bold;vertical-align:middle;">推薦門市</span></div>
+<div style="font-size:15px;color:#666;margin-bottom:4px;line-height:1.5;">📍 <a href="https://www.google.com/maps/search/%E8%87%BA%E4%B8%AD%E5%B8%82%E5%A4%A7%E9%87%8C%E5%8D%80%E4%B8%AD%E8%88%88%E8%B7%AF%E4%BA%8C%E6%AE%B5257%E8%99%9F1%E6%A8%93" target="_blank" style="color:#2A9D8F;text-decoration:none;">臺中市大里區中興路二段257號1樓</a></div>
+<div style="font-size:15px;color:#666;">📞 <a href="tel:0901-016-618" style="color:#2A9D8F;text-decoration:none;">0901-016-618</a></div>
+</div>
+<div style="background:#fafafa;border:1px solid #eee;border-radius:10px;padding:14px 16px;">
+<div style="font-size:16px;font-weight:bold;color:#333;margin-bottom:6px;">安全99_台中市西區</div>
+<div style="font-size:15px;color:#666;margin-bottom:4px;line-height:1.5;">📍 <a href="https://www.google.com/maps/search/%E5%8F%B0%E4%B8%AD%E5%B8%82%E5%8C%97%E5%8D%80%E9%80%B2%E5%8C%96%E5%8C%97%E8%B7%AF378-9%E8%99%9F" target="_blank" style="color:#2A9D8F;text-decoration:none;">台中市北區進化北路378-9號</a></div>
+<div style="font-size:15px;color:#666;">📞 <a href="tel:042376-8168" style="color:#2A9D8F;text-decoration:none;">(04)2376-8168</a></div>
+</div>
+<div style="background:#fafafa;border:1px solid #eee;border-radius:10px;padding:14px 16px;">
+<div style="font-size:16px;font-weight:bold;color:#333;margin-bottom:6px;">康護醫療器材行_大甲門市</div>
+<div style="font-size:15px;color:#666;margin-bottom:4px;line-height:1.5;">📍 <a href="https://www.google.com/maps/search/%E5%8F%B0%E4%B8%AD%E5%B8%82%E5%A4%A7%E7%94%B2%E5%8D%80%E7%B6%93%E5%9C%8B%E8%B7%AF346%E8%99%9F" target="_blank" style="color:#2A9D8F;text-decoration:none;">台中市大甲區經國路346號</a></div>
+<div style="font-size:15px;color:#666;">📞 <a href="tel:0978-461-677" style="color:#2A9D8F;text-decoration:none;">0978-461-677</a></div>
+</div>
+<div style="background:linear-gradient(135deg,#fff9e6 0%,#fff3cc 100%);border:2px solid #F2C94C;border-radius:10px;padding:14px 16px;position:relative;">
+<div style="font-size:16px;font-weight:bold;color:#2A9D8F;margin-bottom:6px;">⭐ 康護醫療器材行_沙鹿門市 <span style="display:inline-block;background:#F2C94C;color:#7a6200;font-size:11px;padding:2px 8px;border-radius:4px;margin-left:6px;font-weight:bold;vertical-align:middle;">推薦門市</span></div>
+<div style="font-size:15px;color:#666;margin-bottom:4px;line-height:1.5;">📍 <a href="https://www.google.com/maps/search/%E5%8F%B0%E4%B8%AD%E5%B8%82%E6%B2%99%E9%B9%BF%E5%8D%80%E5%A4%A7%E5%90%8C%E8%A1%9736%E8%99%9F" target="_blank" style="color:#2A9D8F;text-decoration:none;">台中市沙鹿區大同街36號</a></div>
+<div style="font-size:15px;color:#666;">📞 <a href="tel:0911-687-926" style="color:#2A9D8F;text-decoration:none;">0911-687-926</a></div>
+</div>
+<div style="background:#fafafa;border:1px solid #eee;border-radius:10px;padding:14px 16px;">
+<div style="font-size:16px;font-weight:bold;color:#333;margin-bottom:6px;">康護醫療器材行_梧棲門市</div>
+<div style="font-size:15px;color:#666;margin-bottom:4px;line-height:1.5;">📍 <a href="https://www.google.com/maps/search/%E5%8F%B0%E4%B8%AD%E5%B8%82%E6%A2%A7%E6%A3%B2%E5%8D%80%E6%96%87%E8%8F%AF%E8%A1%97192%E8%99%9F" target="_blank" style="color:#2A9D8F;text-decoration:none;">台中市梧棲區文華街192號</a></div>
+<div style="font-size:15px;color:#666;">📞 <a href="tel:0911-687-926" style="color:#2A9D8F;text-decoration:none;">0911-687-926</a></div>
+</div>
+</div>
+<div style="font-size:18px;font-weight:bold;color:#444;margin:20px 0 12px 0;padding-bottom:6px;border-bottom:1px solid #e0e0e0;">雲林縣 <span style="font-size:14px;color:#aaa;font-weight:normal;">(5 家)</span></div>
+<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px;margin-bottom:8px;">
+<div style="background:#fafafa;border:1px solid #eee;border-radius:10px;padding:14px 16px;">
+<div style="font-size:16px;font-weight:bold;color:#333;margin-bottom:6px;">長和長照醫療用品_雲林縣虎尾</div>
+<div style="font-size:15px;color:#666;margin-bottom:4px;line-height:1.5;">📍 <a href="https://www.google.com/maps/search/%E9%9B%B2%E6%9E%97%E7%B8%A3%E8%99%8E%E5%B0%BE%E9%8E%AE%E6%96%B0%E7%94%9F%E8%B7%AF147%E8%99%9F" target="_blank" style="color:#2A9D8F;text-decoration:none;">雲林縣虎尾鎮新生路147號</a></div>
+<div style="font-size:15px;color:#666;">📞 <a href="tel:05633-6958" style="color:#2A9D8F;text-decoration:none;">(05)633-6958</a></div>
+</div>
+<div style="background:#fafafa;border:1px solid #eee;border-radius:10px;padding:14px 16px;">
+<div style="font-size:16px;font-weight:bold;color:#333;margin-bottom:6px;">上好藥局_永安門市</div>
+<div style="font-size:15px;color:#666;margin-bottom:4px;line-height:1.5;">📍 <a href="https://www.google.com/maps/search/%E9%9B%B2%E6%9E%97%E7%B8%A3%E6%96%97%E5%85%AD%E5%B8%82%E6%B0%B8%E5%AE%89%E8%B7%AF72%E8%99%9F" target="_blank" style="color:#2A9D8F;text-decoration:none;">雲林縣斗六市永安路72號</a></div>
+<div style="font-size:15px;color:#666;">📞 <a href="tel:05533-1780" style="color:#2A9D8F;text-decoration:none;">(05)533-1780</a></div>
+</div>
+<div style="background:#fafafa;border:1px solid #eee;border-radius:10px;padding:14px 16px;">
+<div style="font-size:16px;font-weight:bold;color:#333;margin-bottom:6px;">上好藥局_中山門市</div>
+<div style="font-size:15px;color:#666;margin-bottom:4px;line-height:1.5;">📍 <a href="https://www.google.com/maps/search/%E9%9B%B2%E6%9E%97%E7%B8%A3%E6%96%97%E5%85%AD%E5%B8%82%E4%B8%AD%E5%B1%B1%E8%B7%AF213%E8%99%9F" target="_blank" style="color:#2A9D8F;text-decoration:none;">雲林縣斗六市中山路213號</a></div>
+<div style="font-size:15px;color:#666;">📞 <a href="tel:05534-2486" style="color:#2A9D8F;text-decoration:none;">(05)534-2486</a></div>
+</div>
+<div style="background:#fafafa;border:1px solid #eee;border-radius:10px;padding:14px 16px;">
+<div style="font-size:16px;font-weight:bold;color:#333;margin-bottom:6px;">上好藥局_古坑門市</div>
+<div style="font-size:15px;color:#666;margin-bottom:4px;line-height:1.5;">📍 <a href="https://www.google.com/maps/search/%E9%9B%B2%E6%9E%97%E7%B8%A3%E5%8F%A4%E5%9D%91%E9%84%89%E4%B8%AD%E5%B1%B1%E8%B7%AF136%E8%99%9F" target="_blank" style="color:#2A9D8F;text-decoration:none;">雲林縣古坑鄉中山路136號</a></div>
+<div style="font-size:15px;color:#666;">📞 <a href="tel:05558-28318" style="color:#2A9D8F;text-decoration:none;">(05)558-28318</a></div>
+</div>
+<div style="background:#fafafa;border:1px solid #eee;border-radius:10px;padding:14px 16px;">
+<div style="font-size:16px;font-weight:bold;color:#333;margin-bottom:6px;">上好藥局_上海門市</div>
+<div style="font-size:15px;color:#666;margin-bottom:4px;line-height:1.5;">📍 <a href="https://www.google.com/maps/search/%E9%9B%B2%E6%9E%97%E7%B8%A3%E6%96%97%E5%85%AD%E5%B8%82%E4%B8%8A%E6%B5%B7%E8%B7%AF236%E8%99%9F" target="_blank" style="color:#2A9D8F;text-decoration:none;">雲林縣斗六市上海路236號</a></div>
+<div style="font-size:15px;color:#666;">📞 <a href="tel:05537-1749" style="color:#2A9D8F;text-decoration:none;">(05)537-1749</a></div>
+</div>
+</div>
+</div>
+<div style="margin-bottom:36px;">
+<div style="font-size:22px;font-weight:bold;color:#2A9D8F;border-bottom:3px solid #3BBFAD;padding-bottom:10px;margin-bottom:20px;">【南部】 <span style="font-size:15px;color:#999;font-weight:normal;">5 家門市</span></div>
+<div style="font-size:18px;font-weight:bold;color:#444;margin:20px 0 12px 0;padding-bottom:6px;border-bottom:1px solid #e0e0e0;">台南市 <span style="font-size:14px;color:#aaa;font-weight:normal;">(1 家)</span></div>
+<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px;margin-bottom:8px;">
+<div style="background:#fafafa;border:1px solid #eee;border-radius:10px;padding:14px 16px;">
+<div style="font-size:16px;font-weight:bold;color:#333;margin-bottom:6px;">耆妙屋_東寧門市</div>
+<div style="font-size:15px;color:#666;margin-bottom:4px;line-height:1.5;">📍 <a href="https://www.google.com/maps/search/%E5%8F%B0%E5%8D%97%E5%B8%82%E6%9D%B1%E5%8D%80%E6%9D%B1%E5%AF%A7%E8%B7%AF265%E8%99%9F1%E6%A8%93" target="_blank" style="color:#2A9D8F;text-decoration:none;">台南市東區東寧路265號1樓</a></div>
+<div style="font-size:15px;color:#666;">📞 <a href="tel:06703-0328" style="color:#2A9D8F;text-decoration:none;">(06)703-0328</a></div>
+</div>
+</div>
+<div style="font-size:18px;font-weight:bold;color:#444;margin:20px 0 12px 0;padding-bottom:6px;border-bottom:1px solid #e0e0e0;">高雄市 <span style="font-size:14px;color:#aaa;font-weight:normal;">(2 家)</span></div>
+<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px;margin-bottom:8px;">
+<div style="background:#fafafa;border:1px solid #eee;border-radius:10px;padding:14px 16px;">
+<div style="font-size:16px;font-weight:bold;color:#333;margin-bottom:6px;">建昌藥局_高雄市三民區</div>
+<div style="font-size:15px;color:#666;margin-bottom:4px;line-height:1.5;">📍 <a href="https://www.google.com/maps/search/%E9%AB%98%E9%9B%84%E5%B8%82%E4%B8%89%E6%B0%91%E5%8D%80%E5%8D%81%E5%85%A8%E4%B8%80%E8%B7%AF105%E8%99%9F" target="_blank" style="color:#2A9D8F;text-decoration:none;">高雄市三民區十全一路105號</a></div>
+<div style="font-size:15px;color:#666;">📞 <a href="tel:07323-2356" style="color:#2A9D8F;text-decoration:none;">(07)323-2356</a></div>
+</div>
+<div style="background:#fafafa;border:1px solid #eee;border-radius:10px;padding:14px 16px;">
+<div style="font-size:16px;font-weight:bold;color:#333;margin-bottom:6px;">安訢醫療儀器_高雄市阿蓮區</div>
+<div style="font-size:15px;color:#666;margin-bottom:4px;line-height:1.5;">📍 <a href="https://www.google.com/maps/search/%E9%AB%98%E9%9B%84%E5%B8%82%E9%98%BF%E8%93%AE%E5%8D%80%E4%B8%AD%E6%AD%A3%E8%B7%AF523%E8%99%9F" target="_blank" style="color:#2A9D8F;text-decoration:none;">高雄市阿蓮區中正路523號</a></div>
+<div style="font-size:15px;color:#666;">📞 <a href="tel:07632-0632" style="color:#2A9D8F;text-decoration:none;">(07)632-0632</a></div>
+</div>
+</div>
+<div style="font-size:18px;font-weight:bold;color:#444;margin:20px 0 12px 0;padding-bottom:6px;border-bottom:1px solid #e0e0e0;">屏東縣 <span style="font-size:14px;color:#aaa;font-weight:normal;">(2 家)</span></div>
+<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px;margin-bottom:8px;">
+<div style="background:linear-gradient(135deg,#fff9e6 0%,#fff3cc 100%);border:2px solid #F2C94C;border-radius:10px;padding:14px 16px;position:relative;">
+<div style="font-size:16px;font-weight:bold;color:#2A9D8F;margin-bottom:6px;">⭐ 森活藥妝醫療器材 <span style="display:inline-block;background:#F2C94C;color:#7a6200;font-size:11px;padding:2px 8px;border-radius:4px;margin-left:6px;font-weight:bold;vertical-align:middle;">推薦門市</span></div>
+<div style="font-size:15px;color:#666;margin-bottom:4px;line-height:1.5;">📍 <a href="https://www.google.com/maps/search/%E5%B1%8F%E6%9D%B1%E7%B8%A3%E6%BD%AE%E5%B7%9E%E9%8E%AE%E6%9C%9D%E6%98%87%E8%B7%AF325-6%E8%99%9F" target="_blank" style="color:#2A9D8F;text-decoration:none;">屏東縣潮州鎮朝昇路325-6號</a></div>
+<div style="font-size:15px;color:#666;">📞 <a href="tel:08788-1316" style="color:#2A9D8F;text-decoration:none;">(08)788-1316</a></div>
+</div>
+<div style="background:#fafafa;border:1px solid #eee;border-radius:10px;padding:14px 16px;">
+<div style="font-size:16px;font-weight:bold;color:#333;margin-bottom:6px;">凱創生醫</div>
+<div style="font-size:15px;color:#666;margin-bottom:4px;line-height:1.5;">📍 <a href="https://www.google.com/maps/search/%E5%B1%8F%E6%9D%B1%E7%B8%A3%E5%B1%8F%E6%9D%B1%E5%B8%82%E8%8F%AF%E7%9B%9B%E8%A1%9716%E4%B9%8B7%E8%99%9F" target="_blank" style="color:#2A9D8F;text-decoration:none;">屏東縣屏東市華盛街16之7號</a></div>
+<div style="font-size:15px;color:#666;">📞 <a href="tel:08752-0300" style="color:#2A9D8F;text-decoration:none;">(08)752-0300</a></div>
+</div>
+</div>
+</div>
+<div style="text-align:center;padding:28px 0;margin-top:20px;border-top:1px solid #ddd;">
+<div style="font-size:16px;color:#666;margin-bottom:8px;">找不到附近的門市？直接聯繫我們</div>
+<div style="font-size:22px;font-weight:bold;color:#2A9D8F;">📞 02-2370-6060</div>
+<div style="font-size:14px;color:#999;margin-top:4px;">週一至週五 上午 9:00 - 下午 6:00</div>
+</div>
 
-function haversine(a,b,c,d){var R=6371,dL=(c-a)*Math.PI/180,dN=(d-b)*Math.PI/180;var x=Math.sin(dL/2)*Math.sin(dL/2)+Math.cos(a*Math.PI/180)*Math.cos(c*Math.PI/180)*Math.sin(dN/2)*Math.sin(dN/2);return R*2*Math.atan2(Math.sqrt(x),Math.sqrt(1-x))}
-
-function geoAddr(addr){return new Promise(function(ok,no){if(!geocoder){no(new Error('Google Maps 尚未載入，請重新整理頁面'));return}geocoder.geocode({address:addr,region:'tw',language:'zh-TW'},function(r,s){if(s==='OK'&&r&&r[0]){var loc=r[0].geometry.location;ok({lat:loc.lat(),lng:loc.lng()})}else{no(new Error('無法定位地址「'+addr+'」('+s+')'))}})})}
-
-async function findNearest(uLat,uLng,n){
-  var a=[],total=STORES.length,btn=document.getElementById('searchBtn');
-  for(var i=0;i<total;i++){
-    btn.innerHTML='<span class="spinner"></span> 比對門市中 ('+(i+1)+'/'+total+')...';
-    try{var c=await geoAddr(STORES[i].address);a.push({id:STORES[i].id,region:STORES[i].region,city:STORES[i].city,name:STORES[i].name,address:STORES[i].address,phone:STORES[i].phone,lat:c.lat,lng:c.lng,dist:haversine(uLat,uLng,c.lat,c.lng),isNew:!!STORES[i].isNew})}catch(e){}
-  }
-  a.sort(function(x,y){return x.dist-y.dist});return a.slice(0,n);
-}
-
-function mUrl(oLa,oLn,dest,m){return 'https://www.google.com/maps/dir/?api=1&origin='+oLa+','+oLn+'&destination='+encodeURIComponent(dest)+'&travelmode='+m}
-
-function parseTransitSteps(leg){
-  var steps=[];
-  for(var i=0;i<leg.steps.length;i++){
-    var s=leg.steps[i];
-    if(s.travel_mode==='TRANSIT'&&s.transit){
-      var t=s.transit;
-      var line=t.line?t.line.short_name||t.line.name:'';
-      var vehicle=t.line&&t.line.vehicle?t.line.vehicle.name:'';
-      var dep=t.departure_stop?t.departure_stop.name:'';
-      var arr=t.arrival_stop?t.arrival_stop.name:'';
-      var txt='搭乘 '+vehicle+' '+line+'（'+dep+' \u2192 '+arr+'）';
-      if(s.duration)txt+='，約 '+s.duration.text;
-      steps.push(txt);
-    }else if(s.travel_mode==='WALKING'&&s.duration){
-      steps.push('\u{1F6B6} 步行 '+s.distance.text+'（約 '+s.duration.text+'）');
-    }
-  }
-  return steps;
-}
-
-function fetchBothDirs(oLa,oLn,store){
-  var el=document.getElementById('dir-'+store.id);
-  var driveText='',transitText='',transitSteps=[];
-  var driveDone=false,transitDone=false;
-
-  function render(){
-    if(!driveDone||!transitDone) return;
-    var html='<div class="dir-summary">';
-    html+='<div class="dir-row"><span class="dir-icon">\uD83D\uDE97</span><strong>開車</strong>：'+driveText+'</div>';
-    html+='<div class="dir-row"><span class="dir-icon">\uD83D\uDE8C</span><strong>大眾運輸</strong>：'+transitText+'</div>';
-    html+='</div>';
-    if(transitSteps.length>0){
-      html+='<div class="dir-detail-title">\uD83D\uDE8C 最快大眾運輸路線：</div><div class="dir-steps">';
-      for(var i=0;i<transitSteps.length;i++){html+='<div class="dir-step">'+(i+1)+'. '+transitSteps[i]+'</div>'}
-      html+='</div>';
-    }
-    el.innerHTML=html;
-  }
-
-  dirService.route({origin:{lat:oLa,lng:oLn},destination:{lat:store.lat,lng:store.lng},travelMode:'DRIVING'},function(r,st){
-    if(st==='OK'&&r.routes&&r.routes[0]){var l=r.routes[0].legs[0];driveText=l.distance.text+'，約 '+l.duration.text}
-    else{driveText='請點擊按鈕查看'}
-    driveDone=true;render();
-  });
-
-  dirService.route({origin:{lat:oLa,lng:oLn},destination:{lat:store.lat,lng:store.lng},travelMode:'TRANSIT',provideRouteAlternatives:true},function(r,st){
-    if(st==='OK'&&r.routes&&r.routes.length>0){
-      var bestIdx=0,bestSec=Infinity;
-      for(var i=0;i<r.routes.length;i++){var leg=r.routes[i].legs[0];var sec=leg.duration?leg.duration.value:Infinity;if(sec<bestSec){bestSec=sec;bestIdx=i}}
-      var bestLeg=r.routes[bestIdx].legs[0];
-      transitText=bestLeg.distance.text+'，約 '+bestLeg.duration.text;
-      if(r.routes.length>1){transitText+=' （已從 '+r.routes.length+' 條路線中選出最快）'}
-      transitSteps=parseTransitSteps(bestLeg);
-    }else{transitText='請點擊按鈕查看'}
-    transitDone=true;render();
-  });
-}
-
-function renderResults(stores,uLa,uLn){
-  var sec=document.getElementById('results'),list=document.getElementById('storeList');
-  list.innerHTML='';
-  for(var i=0;i<stores.length;i++){
-    var s=stores[i];
-    var dt=s.dist<1?Math.round(s.dist*1000)+' 公尺':s.dist.toFixed(1)+' 公里';
-    var pc=s.phone.replace(/[^\d+]/g,'');
-    var div=document.createElement('div');div.className='store-card';
-    var displayName=(s.isNew?'\u2B50 ':'')+s.name;
-    div.innerHTML=''
-      +'<div class="store-rank">'+(i+1)+'</div>'
-      +'<div class="store-name">'+displayName+'</div>'
-      +'<span class="store-dist">\uD83D\uDCCD 距離約 '+dt+'</span>'
-      +'<div class="store-addr"><span class="ic">\uD83C\uDFE0</span><span>'+s.address+'</span></div>'
-      +'<div class="store-phone"><span class="ic">\uD83D\uDCDE</span><span>'+s.phone+'</span></div>'
-      +'<div class="act-row">'
-      +'<a href="tel:'+pc+'" class="act-btn act-call">\uD83D\uDCDE 撥打電話</a>'
-      +'<a href="'+mUrl(uLa,uLn,s.address,'transit')+'" target="_blank" class="act-btn act-transit">\uD83D\uDE8C 大眾運輸</a>'
-      +'<a href="'+mUrl(uLa,uLn,s.address,'driving')+'" target="_blank" class="act-btn act-drive">\uD83D\uDE97 開車導航</a>'
-      +'</div>'
-      +'<div class="dir-info" id="dir-'+s.id+'"><span class="dir-loading">\uD83D\uDD04 正在查詢交通資訊...</span></div>';
-    list.appendChild(div);
-  }
-  sec.style.display='block';sec.scrollIntoView({behavior:'smooth',block:'start'});
-  for(var j=0;j<stores.length;j++){fetchBothDirs(uLa,uLn,stores[j])}
-}
-
-async function doSearch(){
-  var city=document.getElementById('city').value,dist=document.getElementById('district').value,street=document.getElementById('street').value.trim();
-  var btn=document.getElementById('searchBtn'),errEl=document.getElementById('errMsg');
-  if(!city){errEl.textContent='\u26A0\uFE0F 請選擇縣市';errEl.style.display='block';return}
-  if(!dist){errEl.textContent='\u26A0\uFE0F 請選擇鄉鎮市區';errEl.style.display='block';return}
-  if(!mapsReady){errEl.textContent='\u26A0\uFE0F Google Maps 尚未載入完成，請稍候幾秒再試一次。若持續失敗，請重新整理頁面。';errEl.style.display='block';return}
-  errEl.style.display='none';document.getElementById('results').style.display='none';
-  btn.disabled=true;btn.innerHTML='<span class="spinner"></span> 定位您的地址中...';
-  try{var u=await geoAddr(city+dist+street);var near=await findNearest(u.lat,u.lng,3);if(!near.length)throw new Error('找不到附近的合作門市');renderResults(near,u.lat,u.lng)}
-  catch(e){errEl.textContent='\u26A0\uFE0F '+e.message;errEl.style.display='block'}
-  finally{btn.disabled=false;btn.innerHTML='\uD83D\uDD0D 尋找最近門市'}
-}
-</script>
-<script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCYTBKYMBrqganqjLoUJw86dTnVah7oVGM&callback=onMapsReady" onerror="onMapsError()"></script>
-</body>
-</html>
+</div>
